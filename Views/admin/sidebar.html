@@ -1,0 +1,65 @@
+<link rel="stylesheet" href="../css/sidebar.css" />
+<script src="../js/dashboard.js"></script>
+
+<aside class="sidebar" id="sidebar">
+  <!-- Grid lines overlay — same as login left panel -->
+  <div class="grid-lines"></div>
+
+  <div class="sidebar-header">
+    <div class="logo-icon">
+      <i class="fas fa-video"></i>
+    </div>
+    <span class="logo-text">S-Recorder</span>
+    <button class="sidebar-toggle" id="sidebarToggle" title="Toggle sidebar">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul>
+      <li class="nav-item" data-page="dashboard">
+        <a href="http://localhost:5000/admin/dashboard">
+          <i class="fas fa-tachometer-alt"></i>
+          <span class="nav-label">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item" data-page="recordings">
+        <a href="http://localhost:5000/admin/users">
+          <i class="fas fa-user"></i>
+          <span class="nav-label">Users</span>
+        </a>
+      </li>
+      <li class="nav-item" data-page="analytics">
+        <a href="http://localhost:5000/admin/contacts">
+          <i class="fas fa-contact-card"></i>
+          <span class="nav-label">Contact</span>
+        </a>
+      </li>
+      <li class="nav-item" data-page="cloud">
+        <a href="http://localhost:5000/admin/feedback">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span class="nav-label">Feedback</span>
+        </a>
+      </li>
+      <li class="nav-item" data-page="settings">
+        <a href="http://localhost:5000/admin/reviews">
+          <i class="fas fa-arrow-circle-down"></i>
+          <span class="nav-label">Reviews</span>
+        </a>
+      </li>
+      <li class="nav-item" data-page="profile">
+        <a href="http://localhost:5000/admin/profile">
+          <i class="fas fa-user-circle"></i>
+          <span class="nav-label">Profile</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="http://localhost:5000/login">
+      <i class="fas fa-sign-out-alt"></i>
+      <span class="nav-label">Logout</span>
+    </a>
+  </div>
+</aside>

@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>View Feedback | Admin</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/sidebarAdmin.css" />
+    <script src="../js/admin-sidebar.js"></script>
+    <style>
+      :root {
+        --navy-950: #030a14;
+        --gray-50: #f9fafb;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-500: #6b7280;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --gray-900: #111827;
+        --blue-50: #eff6ff;
+        --blue-500: #3b82f6;
+        --blue-600: #2563eb;
+        --blue-700: #1d4ed8;
+        --accent: #38bdf8;
+        --green-50: #f0fdf4;
+        --green-500: #22c55e;
+        --green-600: #16a34a;
+        --red-50: #fef2f2;
+        --red-500: #ef4444;
+        --yellow-50: #fefce8;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", "Outfit", sans-serif;
+        background: #f1f5f9;
+        color: var(--gray-800);
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .main-content {
+        flex: 1;
+        margin-left: 260px;
+        padding: 2rem;
+        transition: margin-left 0.3s ease;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .page-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .back-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        border: none;
+        background: #fff;
+        color: var(--gray-600);
+        cursor: pointer;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        transition: all 0.2s;
+        flex-shrink: 0;
+      }
+
+      .back-btn:hover {
+        background: var(--blue-50);
+        color: var(--blue-600);
+        transform: translateX(-2px);
+      }
+
+      .page-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .page-title i {
+        color: var(--blue-600);
+      }
+
+      /* Detail Card */
+      .detail-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+      }
+
+      /* ═══════════════════════════════════════════
+           DARK NAVY HEADER — Matches Sidebar
+           ═══════════════════════════════════════════ */
+      .detail-banner {
+        background-color: var(--navy-950);
+        padding: 2rem 2rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        flex-wrap: wrap;
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+      }
+
+      /* Grid lines */
+      .detail-banner::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(56, 189, 248, 0.08) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Top-right orb */
+      .banner-orb-top {
+        position: absolute;
+        width: 350px;
+        height: 350px;
+        background: radial-gradient(
+          circle,
+          rgba(37, 99, 235, 0.35) 0%,
+          transparent 70%
+        );
+        top: -80px;
+        right: -80px;
+        border-radius: 50%;
+        animation: orbFloat1 10s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Bottom-left orb */
+      .banner-orb-bottom {
+        position: absolute;
+        width: 250px;
+        height: 250px;
+        background: radial-gradient(
+          circle,
+          rgba(56, 189, 248, 0.2) 0%,
+          transparent 65%
+        );
+        bottom: -60px;
+        left: -60px;
+        border-radius: 50%;
+        animation: orbFloat2 13s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      @keyframes orbFloat1 {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        50% {
+          transform: translate(-30px, 20px) scale(1.1);
+        }
+      }
+
+      @keyframes orbFloat2 {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        50% {
+          transform: translate(20px, -15px) scale(1.08);
+        }
+      }
+
+      /* White curve at bottom */
+      .banner-curve {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 20px;
+        background: #fff;
+        border-radius: 16px 16px 0 0;
+        z-index: 1;
+      }
+
+      .banner-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        flex-wrap: wrap;
+      }
+
+      .user-avatar-large {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--blue-500), var(--accent));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #fff;
+        border: 3px solid rgba(255, 255, 255, 0.25);
+        box-shadow:
+          0 8px 25px rgba(0, 0, 0, 0.3),
+          0 0 30px rgba(59, 130, 246, 0.2);
+        flex-shrink: 0;
+        animation: avatarGlow 3s ease-in-out infinite;
+      }
+
+      @keyframes avatarGlow {
+        0%,
+        100% {
+          box-shadow:
+            0 8px 25px rgba(0, 0, 0, 0.3),
+            0 0 20px rgba(59, 130, 246, 0.2);
+        }
+        50% {
+          box-shadow:
+            0 8px 25px rgba(0, 0, 0, 0.3),
+            0 0 40px rgba(56, 189, 248, 0.4);
+        }
+      }
+
+      .banner-info h2 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #fff;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .banner-info p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.85rem;
+        margin-top: 0.2rem;
+      }
+
+      /* Detail Body */
+      .detail-body {
+        padding: 2rem;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .info-item {
+        background: var(--gray-50);
+        border: 1px solid var(--gray-100);
+        border-radius: 14px;
+        padding: 1rem 1.2rem;
+      }
+
+      .info-item .info-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .info-item .info-icon.blue {
+        background: var(--blue-50);
+        color: var(--blue-600);
+      }
+      .info-item .info-icon.green {
+        background: var(--green-50);
+        color: var(--green-600);
+      }
+      .info-item .info-icon.yellow {
+        background: var(--yellow-50);
+        color: #d97706;
+      }
+
+      .info-item label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--gray-400);
+        margin-bottom: 0.3rem;
+      }
+
+      .info-item .value {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--gray-800);
+        word-break: break-word;
+      }
+
+      .badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.25rem 0.8rem;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .badge-new {
+        background: #fef3c7;
+        color: #b45309;
+      }
+      .badge-new::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background: #f59e0b;
+        border-radius: 50%;
+        animation: pulse-dot 2s infinite;
+      }
+      .badge-reviewed {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .badge-reviewed::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background: #10b981;
+        border-radius: 50%;
+      }
+
+      @keyframes pulse-dot {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+
+      .message-section {
+        background: var(--gray-50);
+        border: 1.5px dashed var(--gray-300);
+        border-radius: 16px;
+        padding: 1.5rem;
+      }
+
+      .message-section .section-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--gray-400);
+        margin-bottom: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .message-section .message-text {
+        font-size: 0.95rem;
+        color: var(--gray-700);
+        line-height: 1.7;
+        white-space: pre-wrap;
+      }
+
+      .action-row {
+        display: flex;
+        gap: 0.8rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .btn-sm {
+        padding: 0.6rem 1.3rem;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: all 0.2s;
+        font-family: inherit;
+        text-decoration: none;
+        border: none;
+      }
+
+      .btn-primary {
+        background: var(--blue-600);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: var(--blue-700);
+        transform: translateY(-1px);
+      }
+
+      .btn-success {
+        background: var(--green-600);
+        color: #fff;
+      }
+      .btn-success:hover {
+        background: #15803d;
+        transform: translateY(-1px);
+      }
+
+      .btn-danger {
+        background: #fff;
+        color: #ef4444;
+        border: 1.5px solid #fecaca;
+      }
+      .btn-danger:hover {
+        background: #fef2f2;
+      }
+
+      .loading-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: #fff;
+        border-radius: 20px;
+        color: var(--gray-400);
+      }
+
+      .loading-state i {
+        font-size: 2rem;
+        color: var(--blue-500);
+        margin-bottom: 0.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          margin-left: 0;
+          padding: 1rem;
+        }
+        .banner-content {
+          flex-direction: column;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sidebar-container"></div>
+
+    <div class="main-content" id="mainContent">
+      <div class="container">
+        <div class="page-header">
+          <button
+            class="back-btn"
+            onclick="window.location.href = '/admin/feedback'"
+            title="Back to Feedback"
+          >
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <h1 class="page-title">
+            <i class="fas fa-comment-dots"></i> Feedback Details
+          </h1>
+        </div>
+
+        <div id="loadingState" class="loading-state">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Loading feedback details...</p>
+        </div>
+
+        <div id="detailCard" style="display: none"></div>
+      </div>
+    </div>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const feedbackId = params.get("id");
+
+      function getInitials(name) {
+        return name
+          ? name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 2)
+          : "?";
+      }
+
+      function escapeHtml(text) {
+        if (!text) return "";
+        return text.replace(
+          /[&<>"']/g,
+          (m) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#039;",
+            })[m],
+        );
+      }
+
+      async function loadFeedbackDetail() {
+        if (!feedbackId) {
+          document.getElementById("loadingState").innerHTML =
+            '<i class="fas fa-exclamation-circle" style="color:#ef4444;"></i><p style="color:#ef4444;">No feedback ID provided.</p>';
+          return;
+        }
+
+        try {
+          const res = await fetch("/api/admin/feedback/" + feedbackId);
+          if (!res.ok) throw new Error("Not found");
+          const fb = await res.json();
+          renderDetail(fb);
+          document.getElementById("loadingState").style.display = "none";
+          document.getElementById("detailCard").style.display = "block";
+        } catch (err) {
+          document.getElementById("loadingState").innerHTML =
+            '<i class="fas fa-exclamation-circle" style="color:#ef4444;"></i><p style="color:#ef4444;">Feedback not found.</p>';
+        }
+      }
+
+      function renderDetail(fb) {
+        const isReviewed = fb.status === "reviewed";
+        const statusBadge = isReviewed
+          ? '<span class="badge-status badge-reviewed">Reviewed</span>'
+          : '<span class="badge-status badge-new">New</span>';
+
+        document.getElementById("detailCard").innerHTML = `
+            <div class="detail-card">
+                <div class="detail-banner">
+                    <div class="banner-orb-top"></div>
+                    <div class="banner-orb-bottom"></div>
+                    <div class="banner-curve"></div>
+                    <div class="banner-content">
+                        <div class="user-avatar-large">${getInitials(fb.userName)}</div>
+                        <div class="banner-info">
+                            <h2>${escapeHtml(fb.userName)}</h2>
+                            <p><i class="fas fa-envelope"></i> ${escapeHtml(fb.email)}</p>
+                        </div>
+                    </div>
+                    <br><br><br><br><br><br>
+                </div>
+                <div class="detail-body">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-icon blue"><i class="fas fa-user"></i></div>
+                            <label>From</label>
+                            <div class="value">${escapeHtml(fb.userName)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon green"><i class="fas fa-envelope"></i></div>
+                            <label>Email</label>
+                            <div class="value">${escapeHtml(fb.email)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon yellow"><i class="fas fa-circle"></i></div>
+                            <label>Status</label>
+                            <div class="value">${statusBadge}</div>
+                        </div>
+                    </div>
+
+                    <div class="message-section">
+                        <div class="section-label"><i class="fas fa-quote-left"></i> Feedback Message</div>
+                        <div class="message-text">${escapeHtml(fb.message)}</div>
+                    </div>
+
+                    <div class="action-row">
+                        <a href="/admin/feedback" class="btn-sm btn-primary">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                        ${
+                          !isReviewed
+                            ? `
+                        <button class="btn-sm btn-success" onclick="toggleStatus('${fb._id}', 'reviewed')">
+                            <i class="fas fa-check"></i> Mark Reviewed
+                        </button>
+                        `
+                            : `
+                        <button class="btn-sm btn-success" onclick="toggleStatus('${fb._id}', 'new')">
+                            <i class="fas fa-undo"></i> Mark Unreviewed
+                        </button>
+                        `
+                        }
+                        <button class="btn-sm btn-danger" onclick="deleteFeedback('${fb._id}')">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+      }
+
+      window.toggleStatus = async function (id, newStatus) {
+        try {
+          const res = await fetch("/api/admin/feedback/" + id, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: newStatus }),
+          });
+          if (res.ok) {
+            window.location.reload();
+          } else {
+            const data = await res.json();
+            alert("Failed: " + (data.message || "Unknown error"));
+          }
+        } catch (err) {
+          alert("Network error: " + err.message);
+        }
+      };
+
+      window.deleteFeedback = async function (id) {
+        if (!confirm("Delete this feedback permanently?")) return;
+        try {
+          const res = await fetch("/api/admin/feedback/" + id, {
+            method: "DELETE",
+          });
+          if (res.ok) {
+            window.location.href = "/admin/feedback";
+          }
+        } catch (err) {
+          alert("Failed: " + err.message);
+        }
+      };
+
+      document.addEventListener("DOMContentLoaded", loadFeedbackDetail);
+    </script>
+  </body>
+</html>

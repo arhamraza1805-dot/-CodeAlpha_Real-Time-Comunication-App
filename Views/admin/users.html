@@ -1,0 +1,1402 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Users | Screen Recorder</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/sidebarAdmin.css" />
+    <script src="../js/admin-sidebar.js"></script>
+    <style>
+      :root {
+        --navy-950: #030a14;
+        --navy-900: #051220;
+        --navy-800: #0a1a2f;
+        --blue-500: #2563eb;
+        --blue-400: #3b82f6;
+        --blue-300: #93c5fd;
+        --accent: #38bdf8;
+        --white: #ffffff;
+        --gray-50: #f8fafc;
+        --gray-100: #f1f5f9;
+        --gray-200: #e2e8f0;
+        --gray-300: #cbd5e1;
+        --gray-400: #94a3b8;
+        --gray-500: #64748b;
+        --gray-600: #475569;
+        --gray-700: #334155;
+        --gray-800: #1e293b;
+        --gray-900: #111827;
+        --green-500: #22c55e;
+        --green-600: #16a34a;
+        --red-500: #ef4444;
+        --orange-50: #fff7ed;
+        --orange-500: #f97316;
+        --purple-50: #faf5ff;
+        --purple-500: #a855f7;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        overflow: hidden;
+        width: 100%;
+        max-width: 100vw;
+        height: 100%;
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", "Outfit", sans-serif;
+        background: #f1f5f9;
+        color: var(--gray-800);
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .main-content {
+        flex: 1;
+        margin-left: 260px;
+        padding: 0;
+        transition: margin-left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        width: calc(100% - 260px);
+        max-width: calc(100% - 260px);
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      .main-content.sidebar-collapsed {
+        margin-left: 72px;
+        width: calc(100% - 72px);
+        max-width: calc(100% - 72px);
+      }
+
+      /* ══════════════════════════════════════════ */
+      /* ADMIN HEADER - START                      */
+      /* ══════════════════════════════════════════ */
+      .dashboard-header {
+        background: #fff;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--gray-200);
+        box-shadow: 0 1px 4px rgba(59, 130, 246, 0.06);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+
+      .header-left {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header-left .page-title {
+        font-family: "Outfit", sans-serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--blue-500), var(--accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .header-subtitle-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 2px;
+        flex-wrap: wrap;
+      }
+
+      .welcome-msg {
+        font-size: 0.8rem;
+        color: var(--gray-400);
+      }
+
+      .user-count-badge {
+        background: var(--blue-50);
+        color: var(--blue-600);
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .notification-bell {
+        position: relative;
+        font-size: 1.15rem;
+        color: var(--gray-500);
+        cursor: pointer;
+      }
+      .notification-bell:hover {
+        color: var(--blue-500);
+      }
+
+      .badge {
+        position: absolute;
+        top: -7px;
+        right: -9px;
+        background: #ef4444;
+        color: #fff;
+        font-size: 9px;
+        padding: 2px 5px;
+        border-radius: 20px;
+        font-weight: 600;
+      }
+
+      .profile-dropdown {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .avatar img {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--blue-400);
+      }
+
+      .profile-name {
+        font-weight: 500;
+        color: var(--gray-700);
+        font-size: 0.875rem;
+      }
+
+      .profile-dropdown-menu {
+        position: absolute;
+        top: 46px;
+        right: 0;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.12);
+        width: 185px;
+        padding: 0.5rem 0;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.2s;
+        z-index: 100;
+      }
+
+      .profile-dropdown.active .profile-dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .profile-dropdown-menu a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 16px;
+        color: var(--gray-700);
+        text-decoration: none;
+        font-size: 0.85rem;
+      }
+      .profile-dropdown-menu a:hover {
+        background: var(--gray-50);
+      }
+      .profile-dropdown-menu a i {
+        width: 16px;
+        color: var(--gray-400);
+      }
+      .profile-dropdown-menu hr {
+        margin: 5px 0;
+        border-color: var(--gray-100);
+      }
+      /* ══════════════════════════════════════════ */
+      /* ADMIN HEADER - END                        */
+      /* ══════════════════════════════════════════ */
+
+      .container {
+        max-width: 100%;
+        width: 100%;
+        margin: 0 auto;
+        padding: 1.5rem 2rem;
+        flex: 1 0 auto;
+      }
+
+      /* Stats Cards */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .stat-card {
+        background: #fff;
+        padding: 1.3rem 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        cursor: pointer;
+        border: 2px solid transparent;
+      }
+      .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      .stat-card.active {
+        border-color: var(--blue-500);
+        background: #eff6ff;
+      }
+
+      .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+      }
+      .stat-icon.total {
+        background: #eff6ff;
+        color: var(--blue-500);
+      }
+      .stat-icon.admin {
+        background: var(--purple-50);
+        color: var(--purple-500);
+      }
+      .stat-icon.active {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .stat-icon.blocked {
+        background: #fef2f2;
+        color: var(--red-500);
+      }
+
+      .stat-info h4 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        line-height: 1;
+      }
+      .stat-info p {
+        font-size: 0.8rem;
+        color: var(--gray-500);
+        margin-top: 0.2rem;
+        font-weight: 500;
+      }
+
+      /* Filter Section */
+      .filter-section {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        margin-bottom: 1.5rem;
+      }
+      .filter-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        flex-wrap: wrap;
+      }
+      .filter-row:first-child {
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--gray-100);
+      }
+      .filter-label {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--gray-600);
+        white-space: nowrap;
+        min-width: 50px;
+      }
+      .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        flex: 1;
+        min-width: 150px;
+      }
+      .filter-group input[type="date"],
+      .filter-group input[type="month"],
+      .filter-group input[type="number"] {
+        padding: 0.6rem 1rem;
+        border: 1.5px solid var(--gray-200);
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        color: var(--gray-700);
+        background: var(--gray-50);
+        outline: none;
+        transition: border-color 0.2s;
+        width: 100%;
+      }
+      .filter-group input:focus {
+        border-color: var(--blue-500);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      .btn-primary,
+      .btn-secondary,
+      .btn-success {
+        padding: 0.6rem 1.3rem;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: all 0.2s;
+        font-family: inherit;
+        white-space: nowrap;
+        text-decoration: none;
+      }
+      .btn-primary {
+        background: var(--blue-500);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      }
+      .btn-secondary {
+        background: var(--gray-100);
+        color: var(--gray-700);
+      }
+      .btn-secondary:hover {
+        background: var(--gray-200);
+      }
+      .btn-success {
+        background: var(--green-600);
+        color: #fff;
+      }
+      .btn-success:hover {
+        background: #15803d;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+      }
+
+      .search-box {
+        position: relative;
+        width: 100%;
+      }
+      .search-box i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-400);
+        font-size: 0.9rem;
+      }
+      .search-box input {
+        width: 100%;
+        padding: 0.65rem 1rem 0.65rem 2.5rem;
+        border: 1.5px solid var(--gray-200);
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        background: var(--gray-50);
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .search-box input:focus {
+        border-color: var(--blue-500);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      /* Table */
+      .table-responsive {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        overflow: visible;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      thead th {
+        background: var(--gray-50);
+        padding: 1rem 1.2rem;
+        text-align: left;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid var(--gray-100);
+        position: sticky;
+        top: 0;
+        z-index: 5;
+      }
+      tbody td {
+        padding: 1rem 1.2rem;
+        font-size: 0.9rem;
+        border-bottom: 1px solid var(--gray-100);
+        color: var(--gray-700);
+        vertical-align: middle;
+      }
+      tbody tr {
+        transition: background 0.2s;
+      }
+      tbody tr:hover {
+        background: #f8fafc;
+      }
+
+      .user-name-cell {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-weight: 600;
+        color: var(--gray-900);
+      }
+      .user-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+      .user-avatar-placeholder {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+      }
+
+      .badge-role {
+        padding: 0.3rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-block;
+      }
+      .badge-admin {
+        background: #faf5ff;
+        color: #7c3aed;
+      }
+      .badge-user {
+        background: #eff6ff;
+        color: var(--blue-600);
+      }
+      .badge-active {
+        background: #d1fae5;
+        color: #065f46;
+        padding: 0.3rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      .badge-active::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background: #10b981;
+        border-radius: 50%;
+      }
+      .badge-blocked {
+        background: #fef2f2;
+        color: #991b1b;
+        padding: 0.3rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      .badge-blocked::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background: #ef4444;
+        border-radius: 50%;
+        animation: pulse-dot 2s infinite;
+      }
+      @keyframes pulse-dot {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+
+      /* ═══ Action Dropdown with fixed positioning ═══ */
+      .user-actions {
+        position: relative;
+      }
+
+      .menu-toggle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        color: var(--gray-500);
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .menu-toggle:hover {
+        background: var(--gray-100);
+        color: var(--gray-700);
+      }
+
+      .action-dropdown {
+        display: none;
+        position: fixed;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+        min-width: 180px;
+        z-index: 9999;
+        overflow: hidden;
+        animation: dropdownIn 0.2s ease;
+      }
+      @keyframes dropdownIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .action-dropdown.show {
+        display: block;
+      }
+      .action-dropdown button {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--gray-700);
+        font-family: inherit;
+        transition: background 0.2s;
+      }
+      .action-dropdown button:hover {
+        background: var(--gray-50);
+      }
+      .action-dropdown button i {
+        width: 20px;
+        text-align: center;
+        font-size: 0.85rem;
+      }
+      .action-dropdown .btn-edit i {
+        color: var(--blue-500);
+      }
+      .action-dropdown .btn-view i {
+        color: var(--purple-500);
+      }
+      .action-dropdown .btn-message i {
+        color: var(--green-600);
+      }
+      .action-dropdown .btn-block i {
+        color: var(--orange-500);
+      }
+      .action-dropdown .btn-delete i {
+        color: var(--red-500);
+      }
+      .action-dropdown .btn-delete {
+        color: var(--red-500);
+      }
+      .action-dropdown .btn-delete:hover {
+        background: #fef2f2;
+      }
+
+      /* Empty State */
+      .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      }
+      .empty-state i {
+        color: var(--gray-300);
+        margin-bottom: 1rem;
+      }
+      .empty-state h3 {
+        font-size: 1.2rem;
+        color: var(--gray-600);
+        margin-bottom: 0.4rem;
+      }
+      .empty-state p {
+        color: var(--gray-400);
+        font-size: 0.9rem;
+      }
+
+      /* Loading */
+      .loading-spinner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+        background: #fff;
+        border-radius: 16px;
+      }
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid var(--gray-200);
+        border-top-color: var(--blue-500);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .loading-spinner p {
+        color: var(--gray-400);
+        margin-top: 0.8rem;
+        font-weight: 500;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .main-content {
+          margin-left: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .main-content.sidebar-collapsed {
+          margin-left: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .container {
+          padding: 1rem;
+        }
+        .dashboard-header {
+          padding: 0.8rem 1rem;
+        }
+        .header-left .page-title {
+          font-size: 1.2rem;
+        }
+        .profile-name {
+          display: none;
+        }
+        .filter-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .filter-group {
+          min-width: auto;
+        }
+        .stats-row {
+          grid-template-columns: 1fr 1fr;
+        }
+        thead th:nth-child(3),
+        tbody td:nth-child(3),
+        thead th:nth-child(6),
+        tbody td:nth-child(6) {
+          display: none;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .stats-row {
+          grid-template-columns: 1fr;
+        }
+        .header-subtitle-row {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sidebar-container"></div>
+
+    <div class="main-content" id="mainContent">
+      <!-- ══════════════════════════════════════════ -->
+      <!-- ADMIN HEADER                              -->
+      <!-- ══════════════════════════════════════════ -->
+      <header class="dashboard-header" id="adminHeader">
+        <div class="header-left">
+          <h1 class="page-title"><i class="fas fa-users-cog"></i> All Users</h1>
+          <div class="header-subtitle-row">
+            <span class="welcome-msg" id="welcomeMsg">Welcome back, Admin</span>
+            <span class="user-count-badge" id="userCountBadge">
+              <i class="fas fa-users"></i> <span id="userCount">0 users</span>
+            </span>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="notification-bell">
+            <i class="fas fa-bell"></i>
+            <span class="badge" id="notifBadge">0</span>
+          </div>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="avatar">
+              <img
+                id="headerAvatar"
+                src="https://ui-avatars.com/api/?background=2563eb&color=fff&name=Admin"
+                alt="avatar"
+              />
+            </div>
+            <span class="profile-name" id="headerName">Admin</span>
+            <i
+              class="fas fa-chevron-down"
+              style="font-size: 0.7rem; color: var(--gray-400)"
+            ></i>
+            <div class="profile-dropdown-menu">
+              <a href="/admin/profile"
+                ><i class="fas fa-user"></i> My Profile</a
+              >
+              <a href="/admin/dashboard"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+              <hr />
+              <a href="/admin/login" id="logoutBtn"
+                ><i class="fas fa-sign-out-alt"></i> Logout</a
+              >
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- ══════════════════════════════════════════ -->
+      <!-- ADMIN HEADER END                          -->
+      <!-- ══════════════════════════════════════════ -->
+
+      <div class="container">
+        <!-- Stats Cards -->
+        <div class="stats-row">
+          <div
+            class="stat-card active"
+            id="statTotal"
+            onclick="filterByRole('all')"
+          >
+            <div class="stat-icon total"><i class="fas fa-users"></i></div>
+            <div class="stat-info">
+              <h4 id="countTotal">0</h4>
+              <p>Total Users</p>
+            </div>
+          </div>
+          <div class="stat-card" id="statAdmin" onclick="filterByRole('admin')">
+            <div class="stat-icon admin">
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="stat-info">
+              <h4 id="countAdmin">0</h4>
+              <p>Admins</p>
+            </div>
+          </div>
+          <div
+            class="stat-card"
+            id="statActive"
+            onclick="filterByRole('active')"
+          >
+            <div class="stat-icon active">
+              <i class="fas fa-user-check"></i>
+            </div>
+            <div class="stat-info">
+              <h4 id="countActive">0</h4>
+              <p>Active</p>
+            </div>
+          </div>
+          <div
+            class="stat-card"
+            id="statBlocked"
+            onclick="filterByRole('blocked')"
+          >
+            <div class="stat-icon blocked">
+              <i class="fas fa-user-lock"></i>
+            </div>
+            <div class="stat-info">
+              <h4 id="countBlocked">0</h4>
+              <p>Blocked</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+          <div class="filter-row">
+            <span class="filter-label"
+              ><i class="far fa-calendar-alt"></i> Filters</span
+            >
+            <div class="filter-group">
+              <input type="date" id="filterDate" placeholder="Date" />
+            </div>
+            <div class="filter-group">
+              <input type="month" id="filterMonth" placeholder="Month" />
+            </div>
+            <div class="filter-group">
+              <input
+                type="number"
+                id="filterYear"
+                placeholder="Year (e.g., 2026)"
+                min="2020"
+                max="2099"
+              />
+            </div>
+            <button id="applyFilter" class="btn-primary">
+              <i class="fas fa-filter"></i> Apply
+            </button>
+            <button id="resetFilter" class="btn-secondary">
+              <i class="fas fa-undo"></i> Reset
+            </button>
+            <a
+              href="#"
+              id="messageAllLink"
+              class="btn-success"
+              style="text-decoration: none"
+            >
+              <i class="fas fa-envelope-open-text"></i> Message All
+            </a>
+          </div>
+          <div class="filter-row">
+            <span class="filter-label"
+              ><i class="fas fa-search"></i> Search</span
+            >
+            <div class="search-box">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by name or email..."
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="table-responsive">
+          <table id="usersTable">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Registered</th>
+                <th style="width: 60px; text-align: center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+        </div>
+
+        <div id="noUsersMessage" class="empty-state" style="display: none">
+          <i class="fas fa-user-slash fa-4x"></i>
+          <h3>No users found</h3>
+          <p>Try adjusting your filters or search.</p>
+        </div>
+
+        <div id="loadingSpinner" class="loading-spinner" style="display: flex">
+          <div class="spinner"></div>
+          <p>Loading users...</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "http://localhost:5000/api";
+      let allUsers = [];
+      let currentRoleFilter = "all";
+
+      // ═══════════════════════════════════
+      // PROFILE DROPDOWN (Header)
+      // ═══════════════════════════════════
+      (function initProfileDropdown() {
+        const adminToken = sessionStorage.getItem("adminToken");
+        const adminUser = JSON.parse(
+          sessionStorage.getItem("adminUser") || "{}",
+        );
+
+        if (!adminToken) {
+          window.location.href = "/admin/login";
+          return;
+        }
+
+        if (adminUser.name) {
+          document.getElementById("headerName").textContent = adminUser.name;
+          document.getElementById("welcomeMsg").textContent =
+            "Welcome back, " + adminUser.name.split(" ")[0];
+        }
+        if (adminUser.profile_image) {
+          document.getElementById("headerAvatar").src = adminUser.profile_image;
+        }
+
+        // Profile dropdown toggle
+        const profileDropdown = document.getElementById("profileDropdown");
+        if (profileDropdown) {
+          profileDropdown.addEventListener("click", function (e) {
+            e.stopPropagation();
+            this.classList.toggle("active");
+          });
+        }
+
+        // Close profile dropdown on outside click
+        document.addEventListener("click", function (e) {
+          const pd = document.getElementById("profileDropdown");
+          if (pd && !pd.contains(e.target)) {
+            pd.classList.remove("active");
+          }
+        });
+
+        // Logout
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            sessionStorage.clear();
+            window.location.href = "/admin/login";
+          });
+        }
+      })();
+
+      // ═══════════════════════════════════
+      // USERS PAGE LOGIC
+      // ═══════════════════════════════════
+      function getInitials(name) {
+        return name
+          ? name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 2)
+          : "?";
+      }
+
+      function showLoading(show) {
+        document.getElementById("loadingSpinner").style.display = show
+          ? "flex"
+          : "none";
+        if (show) document.getElementById("usersTableBody").innerHTML = "";
+        document.getElementById("noUsersMessage").style.display = "none";
+      }
+
+      function escapeHtml(unsafe) {
+        if (!unsafe) return "";
+        return unsafe.replace(
+          /[&<>"']/g,
+          (m) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#039;",
+            })[m],
+        );
+      }
+
+      function updateStats() {
+        const total = allUsers.length;
+        const admins = allUsers.filter((u) => u.isAdmin).length;
+        const blocked = allUsers.filter((u) => u.isBlocked).length;
+        const active = total - blocked;
+
+        document.getElementById("countTotal").textContent = total;
+        document.getElementById("countAdmin").textContent = admins;
+        document.getElementById("countActive").textContent = active;
+        document.getElementById("countBlocked").textContent = blocked;
+        document.getElementById("userCount").textContent =
+          total + " user" + (total !== 1 ? "s" : "");
+      }
+
+      function applyAllFilters() {
+        let filtered = [...allUsers];
+
+        if (currentRoleFilter === "admin") {
+          filtered = filtered.filter((u) => u.isAdmin);
+        } else if (currentRoleFilter === "active") {
+          filtered = filtered.filter((u) => !u.isBlocked);
+        } else if (currentRoleFilter === "blocked") {
+          filtered = filtered.filter((u) => u.isBlocked);
+        }
+
+        const term = document
+          .getElementById("searchInput")
+          .value.toLowerCase()
+          .trim();
+        if (term) {
+          filtered = filtered.filter(
+            (u) =>
+              (u.name && u.name.toLowerCase().includes(term)) ||
+              (u.email && u.email.toLowerCase().includes(term)),
+          );
+        }
+
+        renderTable(filtered);
+      }
+
+      window.filterByRole = function (role) {
+        currentRoleFilter = role;
+        document
+          .querySelectorAll(".stat-card")
+          .forEach((card) => card.classList.remove("active"));
+        if (role === "all")
+          document.getElementById("statTotal").classList.add("active");
+        if (role === "admin")
+          document.getElementById("statAdmin").classList.add("active");
+        if (role === "active")
+          document.getElementById("statActive").classList.add("active");
+        if (role === "blocked")
+          document.getElementById("statBlocked").classList.add("active");
+        applyAllFilters();
+      };
+
+      /* ═══ Smart dropdown positioning ═══ */
+      function positionActionDropdown(toggleBtn, dropdown) {
+        const rect = toggleBtn.getBoundingClientRect();
+        const dropdownHeight = 250;
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+
+        let top = rect.bottom + 4;
+        let left = rect.left - 170;
+
+        if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
+          top = rect.top - dropdownHeight - 4;
+        }
+
+        if (left < 8) left = 8;
+        if (left + 180 > window.innerWidth - 8) left = window.innerWidth - 188;
+
+        dropdown.style.top = top + "px";
+        dropdown.style.left = left + "px";
+      }
+
+      function renderTable(users) {
+        const tbody = document.getElementById("usersTableBody");
+        const noMsg = document.getElementById("noUsersMessage");
+        const table = document.getElementById("usersTable");
+
+        if (!users || users.length === 0) {
+          tbody.innerHTML = "";
+          table.style.display = "none";
+          noMsg.style.display = "block";
+          return;
+        }
+
+        table.style.display = "";
+        noMsg.style.display = "none";
+
+        tbody.innerHTML = users
+          .map((user) => {
+            const roleClass = user.isAdmin ? "badge-admin" : "badge-user";
+            const roleText = user.isAdmin ? "Admin" : "User";
+            const statusText = user.isBlocked ? "Blocked" : "Active";
+            const statusClass = user.isBlocked
+              ? "badge-blocked"
+              : "badge-active";
+            const registered = new Date(user.createdAt).toLocaleDateString(
+              "en-US",
+              {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              },
+            );
+
+            const avatarHtml = user.profile_image
+              ? `<img src="${user.profile_image}" class="user-avatar" alt="${escapeHtml(user.name)}">`
+              : `<div class="user-avatar-placeholder">${getInitials(user.name)}</div>`;
+
+            return `
+                <tr data-userid="${user._id}">
+                    <td>
+                        <div class="user-name-cell">
+                            ${avatarHtml}
+                            <span>${escapeHtml(user.name)}</span>
+                        </div>
+                    </td>
+                    <td>${escapeHtml(user.email)}</td>
+                    <td>${escapeHtml(user.phone || "—")}</td>
+                    <td><span class="badge-role ${roleClass}">${roleText}</span></td>
+                    <td><span class="${statusClass}">${statusText}</span></td>
+                    <td>${registered}</td>
+                    <td class="user-actions">
+                        <button class="menu-toggle" data-userid="${user._id}" title="Actions">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="action-dropdown" id="action-${user._id}">
+                            <button class="btn-view"><i class="fas fa-eye"></i> View</button>
+                            <button class="btn-edit"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn-message"><i class="fas fa-envelope"></i> Message</button>
+                            <button class="btn-block"><i class="fas fa-ban"></i> ${user.isBlocked ? "Unblock" : "Block"}</button>
+                            <button class="btn-delete"><i class="fas fa-trash-alt"></i> Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+          })
+          .join("");
+
+        // Attach click handlers to each 3-dot button
+        tbody.querySelectorAll(".menu-toggle").forEach((toggle) => {
+          const userId = toggle.dataset.userid;
+          const dropdown = document.getElementById("action-" + userId);
+
+          if (!dropdown) return;
+
+          toggle.addEventListener("click", function (e) {
+            e.stopPropagation();
+
+            // Close any other open action dropdowns
+            document.querySelectorAll(".action-dropdown.show").forEach((d) => {
+              if (d !== dropdown) d.classList.remove("show");
+            });
+            // Close profile dropdown if open
+            document
+              .getElementById("profileDropdown")
+              ?.classList.remove("active");
+
+            // Position and toggle
+            positionActionDropdown(toggle, dropdown);
+            dropdown.classList.toggle("show");
+          });
+
+          // Prevent dropdown clicks from bubbling
+          dropdown.addEventListener("click", function (e) {
+            e.stopPropagation();
+          });
+
+          // Action buttons inside dropdown
+          dropdown
+            .querySelector(".btn-view")
+            ?.addEventListener("click", function () {
+              dropdown.classList.remove("show");
+              viewUser(userId);
+            });
+          dropdown
+            .querySelector(".btn-edit")
+            ?.addEventListener("click", function () {
+              dropdown.classList.remove("show");
+              openEditModal(userId);
+            });
+          dropdown
+            .querySelector(".btn-message")
+            ?.addEventListener("click", function () {
+              dropdown.classList.remove("show");
+              messageUser(userId);
+            });
+          dropdown
+            .querySelector(".btn-block")
+            ?.addEventListener("click", function () {
+              dropdown.classList.remove("show");
+              toggleBlock(userId);
+            });
+          dropdown
+            .querySelector(".btn-delete")
+            ?.addEventListener("click", function () {
+              dropdown.classList.remove("show");
+              deleteUser(userId);
+            });
+        });
+      }
+
+      // Close all dropdowns on outside click
+      document.addEventListener("click", function (e) {
+        // Close action dropdowns
+        document.querySelectorAll(".action-dropdown.show").forEach((d) => {
+          // Don't close if clicking the toggle button
+          const toggle = d.parentElement?.querySelector(".menu-toggle");
+          if (toggle && !toggle.contains(e.target)) {
+            d.classList.remove("show");
+          }
+        });
+      });
+
+      // Reposition open action dropdowns on scroll/resize
+      function repositionAllActionDropdowns() {
+        document.querySelectorAll(".action-dropdown.show").forEach((d) => {
+          const toggle = d.parentElement?.querySelector(".menu-toggle");
+          if (toggle) positionActionDropdown(toggle, d);
+        });
+      }
+      document
+        .querySelector(".main-content")
+        .addEventListener("scroll", repositionAllActionDropdowns, {
+          passive: true,
+        });
+      window.addEventListener("resize", repositionAllActionDropdowns);
+
+      async function fetchUsers(filterParams = {}) {
+        showLoading(true);
+        const qs = new URLSearchParams(filterParams).toString();
+        try {
+          const res = await fetch(`${API_BASE}/admin/users?${qs}`);
+          const data = await res.json();
+          allUsers = data;
+          updateStats();
+          applyAllFilters();
+        } catch (error) {
+          console.error(error);
+          document.getElementById("usersTableBody").innerHTML =
+            '<tr><td colspan="7" style="text-align:center;color:#ef4444;padding:20px;"><i class="fas fa-exclamation-circle"></i> Failed to load users.</td></tr>';
+        } finally {
+          showLoading(false);
+        }
+      }
+
+      async function deleteUser(userId) {
+        if (
+          !confirm(
+            "Permanently delete this user? This action cannot be undone.",
+          )
+        )
+          return;
+        try {
+          const res = await fetch(`${API_BASE}/admin/users/${userId}`, {
+            method: "DELETE",
+          });
+          if (res.ok) {
+            allUsers = allUsers.filter((u) => u._id !== userId);
+            updateStats();
+            applyAllFilters();
+          } else {
+            alert("Delete failed");
+          }
+        } catch (err) {
+          alert("Error: " + err.message);
+        }
+      }
+
+      async function toggleBlock(userId) {
+        try {
+          const res = await fetch(`${API_BASE}/admin/users/${userId}/block`, {
+            method: "PUT",
+          });
+          if (res.ok) {
+            await fetchUsers(getFilterValues());
+          } else {
+            alert("Operation failed");
+          }
+        } catch (err) {
+          alert("Error: " + err.message);
+        }
+      }
+
+      function viewUser(userId) {
+        window.location.href = `/admin/user-view?id=${userId}`;
+      }
+
+      function messageUser(userId) {
+        window.location.href = `/admin/message-user?id=${userId}`;
+      }
+
+      function openEditModal(userId) {
+        window.location.href = `/admin/edit-user?id=${userId}`;
+      }
+
+      function getFilterValues() {
+        const date = document.getElementById("filterDate").value;
+        const month = document.getElementById("filterMonth").value;
+        const year = document.getElementById("filterYear").value;
+        const params = {};
+        if (date) params.date = date;
+        else if (month) params.month = month;
+        else if (year) params.year = year;
+        return params;
+      }
+
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", applyAllFilters);
+
+      document.getElementById("applyFilter").addEventListener("click", () => {
+        currentRoleFilter = "all";
+        document
+          .querySelectorAll(".stat-card")
+          .forEach((card) => card.classList.remove("active"));
+        document.getElementById("statTotal").classList.add("active");
+        fetchUsers(getFilterValues());
+      });
+
+      document.getElementById("resetFilter").addEventListener("click", () => {
+        document.getElementById("filterDate").value = "";
+        document.getElementById("filterMonth").value = "";
+        document.getElementById("filterYear").value = "";
+        document.getElementById("searchInput").value = "";
+        currentRoleFilter = "all";
+        document
+          .querySelectorAll(".stat-card")
+          .forEach((card) => card.classList.remove("active"));
+        document.getElementById("statTotal").classList.add("active");
+        fetchUsers();
+      });
+
+      document
+        .getElementById("messageAllLink")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          const params = getFilterValues();
+          const search = document.getElementById("searchInput").value.trim();
+          if (search) params.search = search;
+          const qs = new URLSearchParams(params).toString();
+          window.location.href = `/admin/message-all?${qs}`;
+        });
+
+      fetchUsers();
+    </script>
+  </body>
+</html>

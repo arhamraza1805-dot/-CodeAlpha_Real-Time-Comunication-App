@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reply to Contact | Screen Recorder</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/sidebarAdmin.css" />
+    <script src="../js/admin-sidebar.js"></script>
+    <style>
+      :root {
+        --gray-50: #f9fafb;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-500: #6b7280;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --gray-900: #111827;
+        --blue-50: #eff6ff;
+        --blue-100: #dbeafe;
+        --blue-500: #3b82f6;
+        --blue-600: #2563eb;
+        --blue-700: #1d4ed8;
+        --green-50: #f0fdf4;
+        --green-500: #22c55e;
+        --green-600: #16a34a;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", "Outfit", sans-serif;
+        background: #f1f5f9;
+        color: var(--gray-800);
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .main-content {
+        flex: 1;
+        margin-left: 260px;
+        padding: 2rem;
+        transition: margin-left 0.3s ease;
+      }
+
+      .container {
+        max-width: 750px;
+        margin: 0 auto;
+      }
+
+      /* Page Header */
+      .page-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .back-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        border: none;
+        background: #fff;
+        color: var(--gray-600);
+        cursor: pointer;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        transition: all 0.2s;
+      }
+
+      .back-btn:hover {
+        background: var(--blue-50);
+        color: var(--blue-600);
+      }
+
+      .page-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .page-title i {
+        color: var(--blue-600);
+      }
+
+      /* Original Message Card */
+      .original-message {
+        background: #fff;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        border-left: 4px solid var(--blue-500);
+      }
+
+      .original-message .label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--gray-400);
+        margin-bottom: 0.5rem;
+      }
+
+      .original-message .message-text {
+        color: var(--gray-700);
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      /* Email Display Box */
+      .email-display {
+        background: var(--blue-50);
+        border: 2px dashed var(--blue-500);
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .email-display .email-label {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--blue-700);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .email-display .email-value {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--gray-900);
+        word-break: break-all;
+      }
+
+      .copy-btn {
+        padding: 0.5rem 1rem;
+        background: var(--blue-600);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: all 0.2s;
+        font-family: inherit;
+        white-space: nowrap;
+      }
+
+      .copy-btn:hover {
+        background: var(--blue-700);
+      }
+
+      .copy-btn.copied {
+        background: var(--green-500);
+      }
+
+      /* Reply Form Card */
+      .reply-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      }
+
+      .reply-card h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin-bottom: 0.3rem;
+      }
+
+      .reply-card .subtitle {
+        font-size: 0.85rem;
+        color: var(--gray-500);
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.2rem;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--gray-700);
+        margin-bottom: 0.4rem;
+      }
+
+      .form-group label .required {
+        color: #ef4444;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        border: 1.5px solid var(--gray-200);
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        color: var(--gray-800);
+        background: var(--gray-50);
+        outline: none;
+        transition: border-color 0.2s;
+        resize: vertical;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        border-color: var(--blue-500);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      .form-group textarea {
+        min-height: 150px;
+      }
+
+      .btn-send {
+        width: 100%;
+        padding: 0.8rem;
+        background: var(--blue-600);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+        font-family: inherit;
+      }
+
+      .btn-send:hover {
+        background: var(--blue-700);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+      }
+
+      .btn-send:disabled {
+        background: var(--gray-300);
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .form-status {
+        text-align: center;
+        margin-top: 1rem;
+        padding: 0.75rem;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: none;
+      }
+
+      .form-status.success {
+        display: block;
+        background: #d1fae5;
+        color: #065f46;
+      }
+
+      .form-status.error {
+        display: block;
+        background: #fef2f2;
+        color: #991b1b;
+      }
+
+      /* Loading */
+      .loading-overlay {
+        text-align: center;
+        padding: 3rem;
+        color: var(--gray-400);
+      }
+
+      .loading-overlay i {
+        font-size: 2rem;
+        color: var(--blue-500);
+        margin-bottom: 0.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          margin-left: 0;
+          padding: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sidebar-container"></div>
+    <div class="main-content" id="mainContent">
+      <div class="container">
+        <!-- Header -->
+        <div class="page-header">
+          <button
+            class="back-btn"
+            onclick="window.location.href = '/admin/contacts'"
+            title="Back to Contacts"
+          >
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <h1 class="page-title">
+            <i class="fas fa-reply"></i> Reply to Message
+          </h1>
+        </div>
+
+        <!-- Loading -->
+        <div id="loadingOverlay" class="loading-overlay">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Loading contact details...</p>
+        </div>
+
+        <!-- Content (hidden until loaded) -->
+        <div id="replyContent" style="display: none">
+          <!-- Original Message -->
+          <div class="original-message">
+            <p class="label">
+              <i class="fas fa-quote-left"></i> Original Message
+            </p>
+            <p class="message-text" id="originalMessage">-</p>
+          </div>
+
+          <!-- Email Display -->
+          <div class="email-display">
+            <div>
+              <p class="email-label">
+                <i class="fas fa-envelope"></i> Recipient Email
+              </p>
+              <p class="email-value" id="recipientEmail">-</p>
+            </div>
+            <button class="copy-btn" onclick="copyEmail()" id="copyBtn">
+              <i class="fas fa-copy"></i> <span>Copy Email</span>
+            </button>
+          </div>
+
+          <!-- Reply Form -->
+          <div class="reply-card">
+            <h3>Send Reply</h3>
+            <p class="subtitle">
+              Fill out the form below to send an email reply via Web3Forms
+            </p>
+
+            <form id="replyForm">
+              <div class="form-group">
+                <label>To Email <span class="required">*</span></label>
+                <input
+                  type="email"
+                  id="toEmail"
+                  placeholder="Paste the recipient email here"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Subject <span class="required">*</span></label>
+                <input
+                  type="text"
+                  id="replySubject"
+                  placeholder="Enter subject..."
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Your Name</label>
+                <input
+                  type="text"
+                  id="senderName"
+                  value="Screen Recorder Team"
+                  placeholder="Your name"
+                />
+              </div>
+              <div class="form-group">
+                <label>Message <span class="required">*</span></label>
+                <textarea
+                  id="replyMessage"
+                  placeholder="Type your reply message here..."
+                  required
+                ></textarea>
+              </div>
+
+              <button type="submit" class="btn-send" id="sendBtn">
+                <i class="fas fa-paper-plane"></i> Send Reply
+              </button>
+            </form>
+
+            <div id="formStatus" class="form-status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Get contact ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const contactId = urlParams.get("id");
+      const API_BASE = "http://localhost:5000/api";
+
+      // Web3Forms API Key - Replace with your actual key from https://web3forms.com
+      const WEB3FORMS_KEY = "71ab45be-dab8-42eb-9381-42ada2f9091b";
+
+      let contactEmail = "";
+
+      // Load contact details
+      async function loadContactDetails() {
+        if (!contactId) {
+          document.getElementById("loadingOverlay").innerHTML =
+            '<i class="fas fa-exclamation-circle" style="color:#ef4444;"></i><p style="color:#ef4444;">No contact ID provided.</p>';
+          return;
+        }
+
+        try {
+          const res = await fetch(`${API_BASE}/admin/contacts/${contactId}`);
+          if (!res.ok) throw new Error("Contact not found");
+
+          const contact = await res.json();
+          contactEmail = contact.email;
+
+          document.getElementById("originalMessage").textContent =
+            contact.message || "No message content";
+          document.getElementById("recipientEmail").textContent = contact.email;
+          document.getElementById("toEmail").value = contact.email;
+          document.getElementById("replySubject").value = contact.subject
+            ? "Re: " + contact.subject
+            : "Re: Your message to Screen Recorder";
+
+          document.getElementById("loadingOverlay").style.display = "none";
+          document.getElementById("replyContent").style.display = "block";
+        } catch (err) {
+          document.getElementById("loadingOverlay").innerHTML =
+            '<i class="fas fa-exclamation-circle" style="color:#ef4444;"></i><p style="color:#ef4444;">Failed to load contact: ' +
+            err.message +
+            "</p>";
+        }
+      }
+
+      // Copy email function
+      window.copyEmail = function () {
+        navigator.clipboard.writeText(contactEmail).then(() => {
+          const btn = document.getElementById("copyBtn");
+          btn.classList.add("copied");
+          btn.innerHTML = '<i class="fas fa-check"></i> <span>Copied!</span>';
+          setTimeout(() => {
+            btn.classList.remove("copied");
+            btn.innerHTML =
+              '<i class="fas fa-copy"></i> <span>Copy Email</span>';
+          }, 2000);
+        });
+      };
+
+      // Handle form submission via Web3Forms
+      document
+        .getElementById("replyForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const sendBtn = document.getElementById("sendBtn");
+          const formStatus = document.getElementById("formStatus");
+
+          sendBtn.disabled = true;
+          sendBtn.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Sending...';
+          formStatus.className = "form-status";
+          formStatus.style.display = "none";
+
+          const formData = {
+            access_key: WEB3FORMS_KEY,
+            to_email: document.getElementById("toEmail").value.trim(),
+            subject: document.getElementById("replySubject").value.trim(),
+            from_name: document.getElementById("senderName").value.trim(),
+            message: document.getElementById("replyMessage").value.trim(),
+          };
+
+          try {
+            const res = await fetch("https://api.web3forms.com/submit", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(formData),
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+              formStatus.className = "form-status success";
+              formStatus.innerHTML =
+                '<i class="fas fa-check-circle"></i> ✅ Reply sent successfully!';
+              formStatus.style.display = "block";
+
+              // Update contact status to "replied" in our database
+              try {
+                await fetch(`${API_BASE}/admin/contacts/${contactId}`, {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    replyMessage: document
+                      .getElementById("replyMessage")
+                      .value.trim(),
+                    status: "replied",
+                  }),
+                });
+              } catch (updateErr) {
+                console.error("Failed to update contact status:", updateErr);
+              }
+
+              // Clear form
+              document.getElementById("replyMessage").value = "";
+
+              // Redirect back after 2 seconds
+              setTimeout(() => {
+                window.location.href = "/admin/contacts";
+              }, 2000);
+            } else {
+              throw new Error(data.message || "Failed to send email");
+            }
+          } catch (err) {
+            formStatus.className = "form-status error";
+            formStatus.innerHTML =
+              '<i class="fas fa-exclamation-circle"></i> ❌ Error: ' +
+              err.message;
+            formStatus.style.display = "block";
+          } finally {
+            sendBtn.disabled = false;
+            sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Reply';
+          }
+        });
+
+      // Load on page ready
+      document.addEventListener("DOMContentLoaded", loadContactDetails);
+    </script>
+  </body>
+</html>

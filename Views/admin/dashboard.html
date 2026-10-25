@@ -1,0 +1,1451 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard | Screen Recorder</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="../css/sidebarAdmin.css" />
+    <script src="../js/admin-sidebar.js"></script>
+    <style>
+      :root {
+        --navy-950: #030a14;
+        --navy-900: #051220;
+        --navy-800: #0a1a2f;
+        --blue-500: #2563eb;
+        --blue-400: #3b82f6;
+        --blue-300: #93c5fd;
+        --accent: #38bdf8;
+        --white: #ffffff;
+        --gray-50: #f8fafc;
+        --gray-100: #f1f5f9;
+        --gray-200: #e2e8f0;
+        --gray-300: #cbd5e1;
+        --gray-400: #94a3b8;
+        --gray-500: #64748b;
+        --gray-600: #475569;
+        --gray-700: #334155;
+        --gray-800: #1e293b;
+        --gray-900: #111827;
+        --green-500: #22c55e;
+        --green-600: #16a34a;
+        --red-500: #ef4444;
+        --yellow-50: #fefce8;
+        --yellow-500: #eab308;
+        --purple-50: #faf5ff;
+        --purple-500: #a855f7;
+        --orange-50: #fff7ed;
+        --orange-500: #f97316;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        overflow: hidden;
+        width: 100%;
+        max-width: 100vw;
+        height: 100%;
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", "Outfit", sans-serif;
+        background: #f1f5f9;
+        color: var(--gray-800);
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .main-content {
+        flex: 1;
+        margin-left: 260px;
+        padding: 0;
+        transition: margin-left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        width: calc(100% - 260px);
+        max-width: calc(100% - 260px);
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      .main-content.sidebar-collapsed {
+        margin-left: 72px;
+        width: calc(100% - 72px);
+        max-width: calc(100% - 72px);
+      }
+
+      /* ══════════════════════════════════════════ */
+      /* ADMIN HEADER - START                      */
+      /* ══════════════════════════════════════════ */
+      .dashboard-header {
+        background: #fff;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--gray-200);
+        box-shadow: 0 1px 4px rgba(59, 130, 246, 0.06);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .header-left {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header-left .page-title {
+        font-family: "Outfit", sans-serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--blue-500), var(--accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .header-subtitle-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 2px;
+        flex-wrap: wrap;
+      }
+
+      .welcome-msg {
+        font-size: 0.8rem;
+        color: var(--gray-400);
+      }
+
+      .header-date {
+        font-size: 0.8rem;
+        color: var(--gray-400);
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
+      .header-date i {
+        font-size: 0.7rem;
+        color: var(--gray-300);
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .notification-bell {
+        position: relative;
+        font-size: 1.15rem;
+        color: var(--gray-500);
+        cursor: pointer;
+      }
+
+      .notification-bell:hover {
+        color: var(--blue-500);
+      }
+
+      .badge {
+        position: absolute;
+        top: -7px;
+        right: -9px;
+        background: #ef4444;
+        color: #fff;
+        font-size: 9px;
+        padding: 2px 5px;
+        border-radius: 20px;
+        font-weight: 600;
+      }
+
+      .profile-dropdown {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .avatar img {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--blue-400);
+      }
+
+      .profile-name {
+        font-weight: 500;
+        color: var(--gray-700);
+        font-size: 0.875rem;
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: 46px;
+        right: 0;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.12);
+        width: 185px;
+        padding: 0.5rem 0;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.2s;
+        z-index: 100;
+      }
+
+      .profile-dropdown.active .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .dropdown-menu a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 16px;
+        color: var(--gray-700);
+        text-decoration: none;
+        font-size: 0.85rem;
+      }
+
+      .dropdown-menu a:hover {
+        background: var(--gray-50);
+      }
+
+      .dropdown-menu a i {
+        width: 16px;
+        color: var(--gray-400);
+      }
+
+      .dropdown-menu hr {
+        margin: 5px 0;
+        border-color: var(--gray-100);
+      }
+
+      /* Refresh button in header */
+      .btn-refresh {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: all 0.2s;
+        font-family: inherit;
+        text-decoration: none;
+        border: none;
+        white-space: nowrap;
+        background: linear-gradient(135deg, var(--blue-500), #1d4ed8);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      }
+
+      .btn-refresh:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+      }
+
+      .btn-refresh i {
+        font-size: 0.75rem;
+      }
+
+      /* ══════════════════════════════════════════ */
+      /* ADMIN HEADER - END                        */
+      /* ══════════════════════════════════════════ */
+
+      .container {
+        max-width: 100%;
+        width: 100%;
+        margin: 0 auto;
+        padding: 1.5rem 2rem;
+        flex: 1 0 auto;
+      }
+
+      /* Stats Cards Row */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        width: 100%;
+      }
+
+      .stat-card {
+        background: #fff;
+        padding: 1.3rem 1.4rem;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+        cursor: pointer;
+        min-width: 0;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        border-color: var(--gray-100);
+      }
+
+      .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+      }
+
+      .stat-icon.blue {
+        background: #eff6ff;
+        color: var(--blue-500);
+      }
+      .stat-icon.yellow {
+        background: var(--yellow-50);
+        color: #d97706;
+      }
+      .stat-icon.purple {
+        background: var(--purple-50);
+        color: var(--purple-500);
+      }
+      .stat-icon.orange {
+        background: var(--orange-50);
+        color: var(--orange-500);
+      }
+
+      .stat-info {
+        min-width: 0;
+      }
+      .stat-info .stat-value {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        line-height: 1;
+        white-space: nowrap;
+      }
+      .stat-info .stat-label {
+        font-size: 0.8rem;
+        color: var(--gray-500);
+        margin-top: 0.25rem;
+        font-weight: 500;
+      }
+      .stat-info .stat-change {
+        font-size: 0.72rem;
+        font-weight: 600;
+        margin-top: 0.3rem;
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+      }
+      .stat-change.up {
+        color: #16a34a;
+      }
+      .stat-change.info {
+        color: var(--blue-500);
+      }
+
+      /* Date Range Filter */
+      .filter-section {
+        background: #fff;
+        padding: 1.3rem 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        width: 100%;
+      }
+
+      .filter-section .filter-label {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--gray-600);
+        white-space: nowrap;
+      }
+
+      .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .filter-group span {
+        font-size: 0.85rem;
+        color: var(--gray-500);
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .filter-group input[type="date"] {
+        padding: 0.55rem 0.9rem;
+        border: 1.5px solid var(--gray-200);
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-family: inherit;
+        color: var(--gray-700);
+        background: var(--gray-50);
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      .filter-group input[type="date"]:focus {
+        border-color: var(--blue-500);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      .btn-sm {
+        padding: 0.55rem 1.1rem;
+        border-radius: 10px;
+        font-size: 0.83rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: all 0.2s;
+        font-family: inherit;
+        text-decoration: none;
+        border: none;
+        white-space: nowrap;
+      }
+
+      .btn-primary {
+        background: var(--blue-500);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      }
+
+      .btn-outline {
+        background: #fff;
+        color: var(--gray-700);
+        border: 1.5px solid var(--gray-200);
+      }
+      .btn-outline:hover {
+        background: var(--gray-50);
+        border-color: var(--gray-300);
+      }
+
+      /* Progress Analysis */
+      .progress-analysis {
+        background: #fff;
+        border: 1px solid var(--gray-200);
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+      }
+
+      .progress-analysis::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 5px;
+        height: 100%;
+        background: linear-gradient(180deg, #3b82f6, #8b5cf6, #06b6d4);
+        border-radius: 5px 0 0 5px;
+      }
+
+      .progress-info h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin-bottom: 0.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .progress-info h3 i {
+        color: var(--blue-500);
+        background: #eff6ff;
+        padding: 0.4rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+      }
+
+      .progress-info p {
+        font-size: 0.8rem;
+        color: var(--gray-500);
+        font-weight: 500;
+      }
+
+      .progress-stats {
+        display: flex;
+        gap: 2.5rem;
+        flex-wrap: wrap;
+      }
+
+      .progress-stat {
+        text-align: center;
+        position: relative;
+      }
+
+      .progress-stat:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        right: -1.25rem;
+        top: 10%;
+        height: 80%;
+        width: 1px;
+        background: var(--gray-200);
+      }
+
+      .progress-stat .p-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        line-height: 1;
+      }
+
+      .progress-stat .p-label {
+        font-size: 0.72rem;
+        color: var(--gray-500);
+        margin-top: 0.2rem;
+        font-weight: 500;
+      }
+
+      .progress-stat .p-change {
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-top: 0.3rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+        padding: 0.15rem 0.5rem;
+        border-radius: 20px;
+      }
+
+      .p-change.positive {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .p-change.negative {
+        background: #fef2f2;
+        color: #991b1b;
+      }
+
+      /* Charts Grid */
+      .charts-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.2rem;
+        margin-bottom: 1.5rem;
+        width: 100%;
+      }
+
+      .chart-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      .chart-card .chart-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .chart-card .chart-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--gray-800);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .chart-card .chart-title i {
+        color: var(--blue-500);
+        font-size: 0.9rem;
+      }
+
+      .chart-container {
+        position: relative;
+        width: 100%;
+        height: 280px;
+      }
+
+      .chart-container canvas {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      /* Toast */
+      .toast {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        background: var(--gray-800);
+        color: #fff;
+        padding: 14px 24px;
+        border-radius: 40px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+        z-index: 2000;
+        animation: toastIn 0.3s ease;
+        display: none;
+      }
+
+      .toast.show {
+        display: flex;
+      }
+      .toast i {
+        color: #22c55e;
+      }
+
+      @keyframes toastIn {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 1200px) {
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .charts-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          margin-left: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .main-content.sidebar-collapsed {
+          margin-left: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .container {
+          padding: 1rem;
+        }
+        .dashboard-header {
+          padding: 0.8rem 1rem;
+        }
+        .header-left .page-title {
+          font-size: 1.2rem;
+        }
+        .profile-name {
+          display: none;
+        }
+        .stats-row {
+          grid-template-columns: 1fr 1fr;
+        }
+        .progress-analysis {
+          flex-direction: column;
+          text-align: center;
+        }
+        .progress-stats {
+          justify-content: center;
+        }
+        .progress-stat:not(:last-child)::after {
+          display: none;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .stats-row {
+          grid-template-columns: 1fr;
+        }
+        .header-subtitle-row {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sidebar-container"></div>
+
+    <div class="main-content" id="mainContent">
+      <!-- ══════════════════════════════════════════ -->
+      <!-- ADMIN HEADER                              -->
+      <!-- ══════════════════════════════════════════ -->
+      <header class="dashboard-header" id="adminHeader">
+        <div class="header-left">
+          <h1 class="page-title">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+          </h1>
+          <div class="header-subtitle-row">
+            <span class="welcome-msg" id="welcomeMsg">Welcome back, Admin</span>
+            <span class="header-date" id="headerDate">
+              <i class="fas fa-calendar-alt"></i>
+              <span id="currentDate"></span>
+            </span>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="notification-bell">
+            <i class="fas fa-bell"></i>
+            <span class="badge" id="notifBadge">0</span>
+          </div>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="avatar">
+              <img
+                id="headerAvatar"
+                src="https://ui-avatars.com/api/?background=2563eb&color=fff&name=Admin"
+                alt="avatar"
+              />
+            </div>
+            <span class="profile-name" id="headerName">Admin</span>
+            <i
+              class="fas fa-chevron-down"
+              style="font-size: 0.7rem; color: var(--gray-400)"
+            ></i>
+            <div class="dropdown-menu">
+              <a href="/admin/profile"
+                ><i class="fas fa-user"></i> My Profile</a
+              >
+              <a href="/admin/dashboard"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+              <hr />
+              <a href="/admin/login" id="logoutBtn"
+                ><i class="fas fa-sign-out-alt"></i> Logout</a
+              >
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- ══════════════════════════════════════════ -->
+      <!-- ADMIN HEADER END                          -->
+      <!-- ══════════════════════════════════════════ -->
+
+      <div class="container">
+        <div style="display: flex; justify-content: end">
+          <button
+            class="btn-refresh"
+            onclick="refreshDashboard()"
+            title="Refresh Dashboard"
+          >
+            <i class="fas fa-sync-alt"></i> Refresh
+          </button>
+        </div>
+        <br />
+        <!-- Stats Cards -->
+        <div class="stats-row">
+          <div
+            class="stat-card"
+            onclick="window.location.href = '/admin/users'"
+          >
+            <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="statUsers">0</div>
+              <div class="stat-label">Total Users</div>
+              <div class="stat-change up">
+                <i class="fas fa-users"></i> All registered
+              </div>
+            </div>
+          </div>
+          <div
+            class="stat-card"
+            onclick="window.location.href = '/admin/contacts'"
+          >
+            <div class="stat-icon yellow"><i class="fas fa-envelope"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="statNewContacts">0</div>
+              <div class="stat-label">New Messages</div>
+              <div class="stat-change info">
+                <i class="fas fa-circle"></i> Unreplied
+              </div>
+            </div>
+          </div>
+          <div
+            class="stat-card"
+            onclick="window.location.href = '/admin/feedback'"
+          >
+            <div class="stat-icon purple">
+              <i class="fas fa-comment-dots"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="statNewFeedback">0</div>
+              <div class="stat-label">New Feedback</div>
+              <div class="stat-change info">
+                <i class="fas fa-circle"></i> Pending review
+              </div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange"><i class="fas fa-star"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="statReviews">0</div>
+              <div class="stat-label">Reviews</div>
+              <div class="stat-change up">
+                <i class="fas fa-star"></i> Platform rating
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Date Range Filter -->
+        <div class="filter-section">
+          <span class="filter-label"
+            ><i class="far fa-calendar-alt"></i> Date Range</span
+          >
+          <div class="filter-group">
+            <span>From:</span>
+            <input type="date" id="startDate" />
+          </div>
+          <div class="filter-group">
+            <span>To:</span>
+            <input type="date" id="endDate" />
+          </div>
+          <button class="btn-sm btn-primary" onclick="applyDateFilter()">
+            <i class="fas fa-filter"></i> Apply Filter
+          </button>
+          <button class="btn-sm btn-outline" onclick="resetDateFilter()">
+            <i class="fas fa-undo"></i> Reset
+          </button>
+        </div>
+
+        <!-- Progress Analysis -->
+        <div class="progress-analysis" id="progressAnalysis">
+          <div class="progress-info">
+            <h3><i class="fas fa-chart-line"></i> Progress Analysis</h3>
+            <p id="progressDateRange">All Time Data</p>
+          </div>
+          <div class="progress-stats">
+            <div class="progress-stat">
+              <div class="p-value" id="progressStart">0</div>
+              <div class="p-label">Start Users</div>
+            </div>
+            <div class="progress-stat">
+              <div class="p-value" id="progressEnd">0</div>
+              <div class="p-label">End Users</div>
+            </div>
+            <div class="progress-stat">
+              <div class="p-value" id="progressGrowth">0</div>
+              <div class="p-label">New Users</div>
+              <div class="p-change positive" id="progressPercent">+0%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3 class="chart-title">
+                <i class="fas fa-chart-line"></i> User Growth Trend
+              </h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="userGrowthChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3 class="chart-title">
+                <i class="fas fa-chart-bar"></i> Messages & Feedback
+              </h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="messagesChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3 class="chart-title">
+                <i class="fas fa-chart-pie"></i> Status Distribution
+              </h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="distributionChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3 class="chart-title">
+                <i class="fas fa-wave-square"></i> Weekly Activity
+              </h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="weeklyChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+      <i class="fas fa-check-circle"></i>
+      <span id="toastMsg">Done!</span>
+    </div>
+
+    <script>
+      /* ══════════════════════════════════════════ */
+      /* ADMIN HEADER JS - START                   */
+      /* ══════════════════════════════════════════ */
+      (function () {
+        const adminToken = sessionStorage.getItem("adminToken");
+        const adminUser = JSON.parse(
+          sessionStorage.getItem("adminUser") || "{}",
+        );
+
+        if (!adminToken) {
+          window.location.href = "/admin/login";
+          return;
+        }
+
+        if (adminUser.name) {
+          document.getElementById("headerName").textContent = adminUser.name;
+          document.getElementById("welcomeMsg").textContent =
+            "Welcome back, " + adminUser.name.split(" ")[0];
+        }
+
+        if (adminUser.profile_image) {
+          document.getElementById("headerAvatar").src = adminUser.profile_image;
+        }
+
+        const dropdown = document.getElementById("profileDropdown");
+        dropdown.addEventListener("click", function (e) {
+          e.stopPropagation();
+          this.classList.toggle("active");
+        });
+
+        document.addEventListener("click", function () {
+          dropdown.classList.remove("active");
+        });
+
+        document
+          .getElementById("logoutBtn")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            sessionStorage.clear();
+            window.location.href = "/admin/login";
+          });
+      })();
+      /* ══════════════════════════════════════════ */
+      /* ADMIN HEADER JS - END                     */
+      /* ══════════════════════════════════════════ */
+
+      const API_BASE = "http://localhost:5000/api";
+      let userGrowthChart, messagesChart, distributionChart, weeklyChart;
+      let allUsers = [],
+        allContacts = [],
+        allFeedbacks = [];
+
+      document.getElementById("currentDate").textContent =
+        new Date().toLocaleDateString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+
+      const today = new Date();
+      const thirtyDaysAgo = new Date(today);
+      thirtyDaysAgo.setDate(today.getDate() - 30);
+      document.getElementById("startDate").value = thirtyDaysAgo
+        .toISOString()
+        .split("T")[0];
+      document.getElementById("endDate").value = today
+        .toISOString()
+        .split("T")[0];
+
+      function showToast(msg) {
+        const toast = document.getElementById("toast");
+        document.getElementById("toastMsg").textContent = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3000);
+      }
+
+      async function fetchDashboardData() {
+        try {
+          const [usersRes, contactsRes, feedbackRes] = await Promise.all([
+            fetch(`${API_BASE}/admin/users`),
+            fetch(`${API_BASE}/admin/contacts`),
+            fetch(`${API_BASE}/admin/feedback`),
+          ]);
+          allUsers = await usersRes.json();
+          allContacts = await contactsRes.json();
+          allFeedbacks = await feedbackRes.json();
+          updateStats();
+          updateProgressAnalysis();
+          updateAllCharts();
+        } catch (err) {
+          console.error("Dashboard error:", err);
+        }
+      }
+
+      function updateStats() {
+        const totalUsers = Array.isArray(allUsers) ? allUsers.length : 0;
+        const newContacts = Array.isArray(allContacts)
+          ? allContacts.filter((c) => c.status !== "replied").length
+          : 0;
+        const newFeedback = Array.isArray(allFeedbacks)
+          ? allFeedbacks.filter((f) => f.status !== "reviewed").length
+          : 0;
+        const totalReviews = Array.isArray(allFeedbacks)
+          ? allFeedbacks.length
+          : 0;
+        document.getElementById("statUsers").textContent = totalUsers;
+        document.getElementById("statNewContacts").textContent = newContacts;
+        document.getElementById("statNewFeedback").textContent = newFeedback;
+        document.getElementById("statReviews").textContent =
+          totalReviews || "—";
+      }
+
+      function updateProgressAnalysis() {
+        const startDate = document.getElementById("startDate").value;
+        const endDate = document.getElementById("endDate").value;
+        if (!startDate || !endDate) {
+          document.getElementById("progressDateRange").textContent =
+            "All Time Data";
+          document.getElementById("progressStart").textContent = Array.isArray(
+            allUsers,
+          )
+            ? allUsers.length
+            : 0;
+          document.getElementById("progressEnd").textContent = Array.isArray(
+            allUsers,
+          )
+            ? allUsers.length
+            : 0;
+          document.getElementById("progressGrowth").textContent = "0";
+          document.getElementById("progressPercent").textContent = "+0%";
+          document.getElementById("progressPercent").className =
+            "p-change positive";
+          return;
+        }
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        document.getElementById("progressDateRange").textContent =
+          `${start.toLocaleDateString("en-US", { month: "short", day: "numeric" })} — ${end.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`;
+        let usersAtStart = 0,
+          usersAtEnd = 0;
+        if (Array.isArray(allUsers)) {
+          usersAtStart = allUsers.filter(
+            (u) => new Date(u.createdAt) <= start,
+          ).length;
+          usersAtEnd = allUsers.filter(
+            (u) => new Date(u.createdAt) <= end,
+          ).length;
+        }
+        const growth = usersAtEnd - usersAtStart;
+        const percentChange =
+          usersAtStart > 0 ? ((growth / usersAtStart) * 100).toFixed(1) : 0;
+        document.getElementById("progressStart").textContent = usersAtStart;
+        document.getElementById("progressEnd").textContent = usersAtEnd;
+        document.getElementById("progressGrowth").textContent =
+          growth >= 0 ? `+${growth}` : growth;
+        document.getElementById("progressPercent").textContent =
+          growth >= 0 ? `+${percentChange}%` : `${percentChange}%`;
+        document.getElementById("progressPercent").className =
+          growth >= 0 ? "p-change positive" : "p-change negative";
+      }
+
+      function applyDateFilter() {
+        updateProgressAnalysis();
+        updateAllCharts();
+        showToast("📅 Date filter applied!");
+      }
+
+      function resetDateFilter() {
+        document.getElementById("startDate").value = thirtyDaysAgo
+          .toISOString()
+          .split("T")[0];
+        document.getElementById("endDate").value = today
+          .toISOString()
+          .split("T")[0];
+        updateProgressAnalysis();
+        updateAllCharts();
+        showToast("🔄 Filter reset!");
+      }
+
+      function getFilteredDataByDate(dataArray) {
+        const startDate = document.getElementById("startDate").value;
+        const endDate = document.getElementById("endDate").value;
+        if (!startDate || !endDate || !Array.isArray(dataArray))
+          return dataArray || [];
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        return dataArray.filter((item) => {
+          const itemDate = new Date(item.createdAt);
+          return itemDate >= start && itemDate <= end;
+        });
+      }
+
+      function generateLabels(days) {
+        const labels = [];
+        for (let i = days - 1; i >= 0; i--) {
+          const d = new Date();
+          d.setDate(d.getDate() - i);
+          labels.push(
+            d.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+          );
+        }
+        return labels;
+      }
+
+      function generateCountPerDay(dataArray, days) {
+        const counts = [];
+        for (let i = days - 1; i >= 0; i--) {
+          const d = new Date();
+          d.setDate(d.getDate() - i);
+          const dateStr = d.toISOString().split("T")[0];
+          const count = Array.isArray(dataArray)
+            ? dataArray.filter(
+                (item) =>
+                  new Date(item.createdAt).toISOString().split("T")[0] ===
+                  dateStr,
+              ).length
+            : 0;
+          counts.push(count);
+        }
+        return counts;
+      }
+
+      function countForDay(dataArray, dayIndex) {
+        if (!Array.isArray(dataArray)) return 0;
+        return dataArray.filter(
+          (item) => new Date(item.createdAt).getDay() === (dayIndex + 1) % 7,
+        ).length;
+      }
+
+      function initUserGrowthChart() {
+        const ctx = document.getElementById("userGrowthChart").getContext("2d");
+        if (userGrowthChart) userGrowthChart.destroy();
+        const labels = generateLabels(30);
+        const filteredUsers = getFilteredDataByDate(allUsers);
+        const data = generateCountPerDay(filteredUsers, 30);
+        userGrowthChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "New Users",
+                data: data,
+                borderColor: "#3b82f6",
+                backgroundColor: "rgba(59,130,246,0.08)",
+                fill: true,
+                tension: 0.4,
+                pointRadius: 3,
+                pointBackgroundColor: "#3b82f6",
+                pointBorderColor: "#fff",
+                pointBorderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: { color: "#f1f5f9" },
+                ticks: { font: { family: "Plus Jakarta Sans", size: 10 } },
+              },
+              x: {
+                grid: { display: false },
+                ticks: {
+                  font: { family: "Plus Jakarta Sans", size: 9 },
+                  maxTicksLimit: 8,
+                },
+              },
+            },
+          },
+        });
+      }
+
+      function initMessagesChart() {
+        const ctx = document.getElementById("messagesChart").getContext("2d");
+        if (messagesChart) messagesChart.destroy();
+        const labels = generateLabels(30);
+        const filteredContacts = getFilteredDataByDate(allContacts);
+        const filteredFeedback = getFilteredDataByDate(allFeedbacks);
+        messagesChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Messages",
+                data: generateCountPerDay(filteredContacts, 30),
+                backgroundColor: "rgba(234,179,8,0.7)",
+                borderRadius: 6,
+                borderSkipped: false,
+              },
+              {
+                label: "Feedback",
+                data: generateCountPerDay(filteredFeedback, 30),
+                backgroundColor: "rgba(168,85,247,0.7)",
+                borderRadius: 6,
+                borderSkipped: false,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: {
+                  usePointStyle: true,
+                  padding: 15,
+                  font: { family: "Plus Jakarta Sans", size: 10 },
+                },
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: { color: "#f1f5f9" },
+                ticks: { font: { family: "Plus Jakarta Sans", size: 10 } },
+              },
+              x: {
+                grid: { display: false },
+                ticks: {
+                  font: { family: "Plus Jakarta Sans", size: 9 },
+                  maxTicksLimit: 8,
+                },
+              },
+            },
+          },
+        });
+      }
+
+      function initDistributionChart() {
+        const ctx = document
+          .getElementById("distributionChart")
+          .getContext("2d");
+        if (distributionChart) distributionChart.destroy();
+        const totalUsers = Array.isArray(allUsers) ? allUsers.length : 0;
+        const newContacts = Array.isArray(allContacts)
+          ? allContacts.filter((c) => c.status !== "replied").length
+          : 0;
+        const repliedContacts = Array.isArray(allContacts)
+          ? allContacts.filter((c) => c.status === "replied").length
+          : 0;
+        const newFeedback = Array.isArray(allFeedbacks)
+          ? allFeedbacks.filter((f) => f.status !== "reviewed").length
+          : 0;
+        const reviewedFeedback = Array.isArray(allFeedbacks)
+          ? allFeedbacks.filter((f) => f.status === "reviewed").length
+          : 0;
+        distributionChart = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: ["Users", "New Msgs", "Replied", "New FB", "Reviewed"],
+            datasets: [
+              {
+                data: [
+                  totalUsers,
+                  newContacts,
+                  repliedContacts,
+                  newFeedback,
+                  reviewedFeedback,
+                ],
+                backgroundColor: [
+                  "#3b82f6",
+                  "#eab308",
+                  "#22c55e",
+                  "#a855f7",
+                  "#14b8a6",
+                ],
+                borderWidth: 3,
+                borderColor: "#fff",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: {
+                  usePointStyle: true,
+                  padding: 12,
+                  font: { family: "Plus Jakarta Sans", size: 10 },
+                },
+              },
+            },
+          },
+        });
+      }
+
+      function initWeeklyChart() {
+        const ctx = document.getElementById("weeklyChart").getContext("2d");
+        if (weeklyChart) weeklyChart.destroy();
+        const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        const filteredUsers = getFilteredDataByDate(allUsers);
+        const filteredContacts = getFilteredDataByDate(allContacts);
+        const filteredFeedback = getFilteredDataByDate(allFeedbacks);
+        weeklyChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: days,
+            datasets: [
+              {
+                label: "Users",
+                data: days.map((_, i) => countForDay(filteredUsers, i)),
+                borderColor: "#3b82f6",
+                backgroundColor: "transparent",
+                tension: 0.4,
+                pointRadius: 4,
+                pointBackgroundColor: "#3b82f6",
+              },
+              {
+                label: "Messages",
+                data: days.map((_, i) => countForDay(filteredContacts, i)),
+                borderColor: "#eab308",
+                backgroundColor: "transparent",
+                tension: 0.4,
+                pointRadius: 4,
+                pointBackgroundColor: "#eab308",
+              },
+              {
+                label: "Feedback",
+                data: days.map((_, i) => countForDay(filteredFeedback, i)),
+                borderColor: "#a855f7",
+                backgroundColor: "transparent",
+                tension: 0.4,
+                pointRadius: 4,
+                pointBackgroundColor: "#a855f7",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: {
+                  usePointStyle: true,
+                  padding: 15,
+                  font: { family: "Plus Jakarta Sans", size: 10 },
+                },
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: { color: "#f1f5f9" },
+                ticks: { font: { family: "Plus Jakarta Sans", size: 10 } },
+              },
+              x: {
+                grid: { display: false },
+                ticks: { font: { family: "Plus Jakarta Sans", size: 10 } },
+              },
+            },
+          },
+        });
+      }
+
+      function updateAllCharts() {
+        initUserGrowthChart();
+        initMessagesChart();
+        initDistributionChart();
+        initWeeklyChart();
+      }
+
+      function refreshDashboard() {
+        showToast("🔄 Dashboard refreshed!");
+        fetchDashboardData();
+      }
+
+      // Handle sidebar toggle — fix chart resize
+      const sidebar = document.getElementById("sidebar-container");
+      if (sidebar) {
+        const observer = new MutationObserver(() => {
+          setTimeout(() => {
+            if (userGrowthChart) userGrowthChart.resize();
+            if (messagesChart) messagesChart.resize();
+            if (distributionChart) distributionChart.resize();
+            if (weeklyChart) weeklyChart.resize();
+          }, 350);
+        });
+        observer.observe(document.body, {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+      }
+
+      const mainContent = document.getElementById("mainContent");
+      mainContent.addEventListener("transitionend", () => {
+        setTimeout(() => {
+          if (userGrowthChart) userGrowthChart.resize();
+          if (messagesChart) messagesChart.resize();
+          if (distributionChart) distributionChart.resize();
+          if (weeklyChart) weeklyChart.resize();
+        }, 50);
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        fetchDashboardData();
+      });
+    </script>
+  </body>
+</html>

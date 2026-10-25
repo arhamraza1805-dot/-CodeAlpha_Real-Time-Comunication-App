@@ -1,0 +1,1253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Admin | Feedback</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/sidebarAdmin.css" />
+    <script src="../js/admin-sidebar.js"></script>
+    <style>
+      :root {
+        --navy-950: #030a14;
+        --navy-900: #051220;
+        --navy-800: #0a1a2f;
+        --blue-500: #2563eb;
+        --blue-400: #3b82f6;
+        --blue-300: #93c5fd;
+        --accent: #38bdf8;
+        --white: #ffffff;
+        --gray-50: #f8fafc;
+        --gray-100: #f1f5f9;
+        --gray-200: #e2e8f0;
+        --gray-300: #cbd5e1;
+        --gray-400: #94a3b8;
+        --gray-500: #64748b;
+        --gray-600: #475569;
+        --gray-700: #334155;
+        --gray-800: #1e293b;
+        --gray-900: #111827;
+        --green-500: #22c55e;
+        --green-600: #16a34a;
+        --red-500: #ef4444;
+        --yellow-50: #fefce8;
+        --yellow-500: #eab308;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        overflow: hidden;
+        width: 100%;
+        max-width: 100vw;
+        height: 100%;
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", "Outfit", sans-serif;
+        background: #f1f5f9;
+        color: var(--gray-800);
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .main-content {
+        flex: 1;
+        margin-left: 260px;
+        padding: 0;
+        transition: margin-left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        width: calc(100% - 260px);
+        max-width: calc(100% - 260px);
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      .main-content.sidebar-collapsed {
+        margin-left: 72px;
+        width: calc(100% - 72px);
+        max-width: calc(100% - 72px);
+      }
+
+      /* ══════════════════════════════════════════ */
+      /* ADMIN HEADER - START                      */
+      /* ══════════════════════════════════════════ */
+      .dashboard-header {
+        background: #fff;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--gray-200);
+        box-shadow: 0 1px 4px rgba(59, 130, 246, 0.06);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+
+      .header-left {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header-left .page-title {
+        font-family: "Outfit", sans-serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--blue-500), var(--accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .header-subtitle-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 2px;
+        flex-wrap: wrap;
+      }
+
+      .welcome-msg {
+        font-size: 0.8rem;
+        color: var(--gray-400);
+      }
+
+      .feedback-count-badge {
+        background: #eff6ff;
+        color: var(--blue-500);
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .notification-bell {
+        position: relative;
+        font-size: 1.15rem;
+        color: var(--gray-500);
+        cursor: pointer;
+      }
+      .notification-bell:hover {
+        color: var(--blue-500);
+      }
+
+      .badge {
+        position: absolute;
+        top: -7px;
+        right: -9px;
+        background: #ef4444;
+        color: #fff;
+        font-size: 9px;
+        padding: 2px 5px;
+        border-radius: 20px;
+        font-weight: 600;
+      }
+
+      .profile-dropdown {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .avatar img {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--blue-400);
+      }
+
+      .profile-name {
+        font-weight: 500;
+        color: var(--gray-700);
+        font-size: 0.875rem;
+      }
+
+      .profile-dropdown-menu {
+        position: absolute;
+        top: 46px;
+        right: 0;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.12);
+        width: 185px;
+        padding: 0.5rem 0;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.2s;
+        z-index: 100;
+      }
+
+      .profile-dropdown.active .profile-dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .profile-dropdown-menu a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 16px;
+        color: var(--gray-700);
+        text-decoration: none;
+        font-size: 0.85rem;
+      }
+      .profile-dropdown-menu a:hover {
+        background: var(--gray-50);
+      }
+      .profile-dropdown-menu a i {
+        width: 16px;
+        color: var(--gray-400);
+      }
+      .profile-dropdown-menu hr {
+        margin: 5px 0;
+        border-color: var(--gray-100);
+      }
+      /* ══════════════════════════════════════════ */
+      /* ADMIN HEADER - END                        */
+      /* ══════════════════════════════════════════ */
+
+      .container {
+        max-width: 100%;
+        width: 100%;
+        margin: 0 auto;
+        padding: 1.5rem 2rem;
+        flex: 1 0 auto;
+      }
+
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .stat-card {
+        background: #fff;
+        padding: 1.3rem 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        border: 2px solid transparent;
+        cursor: pointer;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-card.active {
+        border-color: var(--blue-500);
+        background: #eff6ff;
+      }
+
+      .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+      }
+
+      .stat-icon.total {
+        background: #eff6ff;
+        color: var(--blue-500);
+      }
+      .stat-icon.new {
+        background: var(--yellow-50);
+        color: #d97706;
+      }
+      .stat-icon.reviewed {
+        background: #d1fae5;
+        color: var(--green-600);
+      }
+
+      .stat-info h4 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        line-height: 1;
+      }
+
+      .stat-info p {
+        font-size: 0.8rem;
+        color: var(--gray-500);
+        margin-top: 0.2rem;
+        font-weight: 500;
+      }
+
+      .filter-section {
+        background: #fff;
+        padding: 1.3rem 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        margin-bottom: 1.5rem;
+      }
+
+      .filter-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        flex-wrap: wrap;
+      }
+
+      .filter-row:first-child {
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--gray-100);
+      }
+
+      .filter-label {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--gray-600);
+        white-space: nowrap;
+      }
+
+      .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .filter-group input[type="date"] {
+        padding: 0.6rem 1rem;
+        border: 1.5px solid var(--gray-200);
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        color: var(--gray-700);
+        background: var(--gray-50);
+        outline: none;
+        transition: border-color 0.2s;
+        width: 100%;
+      }
+
+      .filter-group input[type="date"]:focus {
+        border-color: var(--blue-500);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        padding: 0.6rem 1.3rem;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: all 0.2s;
+        font-family: inherit;
+        white-space: nowrap;
+      }
+
+      .btn-primary {
+        background: var(--blue-500);
+        color: #fff;
+      }
+
+      .btn-primary:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      }
+
+      .btn-secondary {
+        background: var(--gray-100);
+        color: var(--gray-700);
+      }
+
+      .btn-secondary:hover {
+        background: var(--gray-200);
+      }
+
+      .search-box {
+        position: relative;
+        width: 100%;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding: 0.65rem 1rem 0.65rem 2.5rem;
+        border: 1.5px solid var(--gray-200);
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        background: var(--gray-50);
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      .search-box input:focus {
+        border-color: var(--blue-500);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      .search-box i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-400);
+        font-size: 0.9rem;
+      }
+
+      .table-responsive {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        overflow: visible;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      thead th {
+        background: var(--gray-50);
+        padding: 1rem 1.2rem;
+        text-align: left;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid var(--gray-100);
+        position: sticky;
+        top: 0;
+        z-index: 5;
+      }
+
+      tbody td {
+        padding: 1rem 1.2rem;
+        font-size: 0.9rem;
+        border-bottom: 1px solid var(--gray-100);
+        color: var(--gray-700);
+        vertical-align: middle;
+      }
+
+      tbody tr {
+        transition: background 0.2s;
+      }
+
+      tbody tr:hover {
+        background: #f8fafc;
+      }
+
+      .user-cell {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-weight: 600;
+        color: var(--gray-900);
+      }
+
+      .user-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+      }
+
+      .message-preview {
+        max-width: 280px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.3rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .badge-new {
+        background: #fef3c7;
+        color: #b45309;
+      }
+      .badge-new::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background: #f59e0b;
+        border-radius: 50%;
+        animation: pulse-dot 2s infinite;
+      }
+
+      .badge-reviewed {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .badge-reviewed::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background: #10b981;
+        border-radius: 50%;
+      }
+
+      @keyframes pulse-dot {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+
+      /* ═══ Action Dropdown with fixed positioning ═══ */
+      .action-cell {
+        position: relative;
+      }
+
+      .action-dots {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        color: var(--gray-500);
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+
+      .action-dots:hover {
+        background: var(--gray-100);
+        color: var(--gray-700);
+      }
+
+      .action-dropdown {
+        display: none;
+        position: fixed;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+        min-width: 190px;
+        z-index: 9999;
+        overflow: hidden;
+        animation: dropdownIn 0.2s ease;
+      }
+
+      @keyframes dropdownIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .action-dropdown.show {
+        display: block;
+      }
+
+      .action-dropdown button {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--gray-700);
+        font-family: inherit;
+        transition: background 0.2s;
+      }
+
+      .action-dropdown button:hover {
+        background: var(--gray-50);
+      }
+
+      .action-dropdown button i {
+        width: 20px;
+        text-align: center;
+        font-size: 0.85rem;
+      }
+
+      .action-dropdown .view-btn i {
+        color: var(--blue-500);
+      }
+      .action-dropdown .review-btn i {
+        color: var(--green-600);
+      }
+      .action-dropdown .delete-btn {
+        color: #ef4444;
+      }
+      .action-dropdown .delete-btn i {
+        color: #ef4444;
+      }
+      .action-dropdown .delete-btn:hover {
+        background: #fef2f2;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+      }
+
+      .empty-state i {
+        color: var(--gray-300);
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .empty-state h3 {
+        font-size: 1.1rem;
+        color: var(--gray-600);
+        margin-bottom: 0.3rem;
+      }
+
+      .empty-state p {
+        color: var(--gray-400);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          margin-left: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .main-content.sidebar-collapsed {
+          margin-left: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .container {
+          padding: 1rem;
+        }
+        .dashboard-header {
+          padding: 0.8rem 1rem;
+        }
+        .header-left .page-title {
+          font-size: 1.2rem;
+        }
+        .profile-name {
+          display: none;
+        }
+        .filter-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .stats-row {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .stats-row {
+          grid-template-columns: 1fr;
+        }
+        .header-subtitle-row {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sidebar-container"></div>
+
+    <div class="main-content" id="mainContent">
+      <!-- ══════════════════════════════════════════ -->
+      <!-- ADMIN HEADER                              -->
+      <!-- ══════════════════════════════════════════ -->
+      <header class="dashboard-header" id="adminHeader">
+        <div class="header-left">
+          <h1 class="page-title">
+            <i class="fas fa-comment-dots"></i> User Feedback
+          </h1>
+          <div class="header-subtitle-row">
+            <span class="welcome-msg" id="welcomeMsg">Welcome back, Admin</span>
+            <span class="feedback-count-badge">
+              <i class="fas fa-comments"></i>
+              <span id="feedbackCount">0 feedback</span>
+            </span>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="notification-bell">
+            <i class="fas fa-bell"></i>
+            <span class="badge" id="notifBadge">0</span>
+          </div>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="avatar">
+              <img
+                id="headerAvatar"
+                src="https://ui-avatars.com/api/?background=2563eb&color=fff&name=Admin"
+                alt="avatar"
+              />
+            </div>
+            <span class="profile-name" id="headerName">Admin</span>
+            <i
+              class="fas fa-chevron-down"
+              style="font-size: 0.7rem; color: var(--gray-400)"
+            ></i>
+            <div class="profile-dropdown-menu">
+              <a href="/admin/profile"
+                ><i class="fas fa-user"></i> My Profile</a
+              >
+              <a href="/admin/dashboard"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+              <hr />
+              <a href="/admin/login" id="logoutBtn"
+                ><i class="fas fa-sign-out-alt"></i> Logout</a
+              >
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- ══════════════════════════════════════════ -->
+      <!-- ADMIN HEADER END                          -->
+      <!-- ══════════════════════════════════════════ -->
+
+      <div class="container">
+        <div class="stats-row">
+          <div
+            class="stat-card active"
+            id="statAll"
+            onclick="filterByStatus('all')"
+          >
+            <div class="stat-icon total"><i class="fas fa-comments"></i></div>
+            <div class="stat-info">
+              <h4 id="statTotal">0</h4>
+              <p>Total</p>
+            </div>
+          </div>
+          <div class="stat-card" id="statNew" onclick="filterByStatus('new')">
+            <div class="stat-icon new"><i class="fas fa-circle"></i></div>
+            <div class="stat-info">
+              <h4 id="statNewCount">0</h4>
+              <p>New</p>
+            </div>
+          </div>
+          <div
+            class="stat-card"
+            id="statReviewed"
+            onclick="filterByStatus('reviewed')"
+          >
+            <div class="stat-icon reviewed">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-info">
+              <h4 id="statReviewedCount">0</h4>
+              <p>Reviewed</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-row">
+            <span class="filter-label"
+              ><i class="far fa-calendar-alt"></i> Date</span
+            >
+            <div class="filter-group">
+              <input type="date" id="filterDate" />
+            </div>
+            <button id="applyFilter" class="btn-primary">
+              <i class="fas fa-filter"></i> Apply
+            </button>
+            <button id="resetFilter" class="btn-secondary">
+              <i class="fas fa-undo"></i> Reset
+            </button>
+          </div>
+          <div class="filter-row">
+            <span class="filter-label"
+              ><i class="fas fa-search"></i> Search</span
+            >
+            <div class="search-box">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by name, email or message..."
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table id="feedbackTable">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Message</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th style="width: 60px; text-align: center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="feedbackBody">
+              <tr id="loadingRow">
+                <td colspan="6" style="text-align: center; padding: 2rem">
+                  <i
+                    class="fas fa-spinner fa-spin"
+                    style="color: #3b82f6; font-size: 1.5rem"
+                  ></i>
+                  <p style="color: var(--gray-400); margin-top: 0.5rem">
+                    Loading feedback...
+                  </p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let allFeedback = [];
+      let currentStatusFilter = "all";
+
+      // ═══════════════════════════════════
+      // PROFILE DROPDOWN (Header)
+      // ═══════════════════════════════════
+      (function initProfileDropdown() {
+        const adminToken = sessionStorage.getItem("adminToken");
+        const adminUser = JSON.parse(
+          sessionStorage.getItem("adminUser") || "{}",
+        );
+
+        if (!adminToken) {
+          window.location.href = "/admin/login";
+          return;
+        }
+
+        if (adminUser.name) {
+          document.getElementById("headerName").textContent = adminUser.name;
+          document.getElementById("welcomeMsg").textContent =
+            "Welcome back, " + adminUser.name.split(" ")[0];
+        }
+        if (adminUser.profile_image) {
+          document.getElementById("headerAvatar").src = adminUser.profile_image;
+        }
+
+        const profileDropdown = document.getElementById("profileDropdown");
+        if (profileDropdown) {
+          profileDropdown.addEventListener("click", function (e) {
+            e.stopPropagation();
+            this.classList.toggle("active");
+          });
+        }
+
+        document.addEventListener("click", function (e) {
+          const pd = document.getElementById("profileDropdown");
+          if (pd && !pd.contains(e.target)) {
+            pd.classList.remove("active");
+          }
+        });
+
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            sessionStorage.clear();
+            window.location.href = "/admin/login";
+          });
+        }
+      })();
+
+      // ═══════════════════════════════════
+      // FEEDBACK PAGE LOGIC
+      // ═══════════════════════════════════
+      function getInitials(name) {
+        return name
+          ? name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 2)
+          : "?";
+      }
+
+      function escapeHtml(text) {
+        if (!text) return "";
+        return text.replace(
+          /[&<>"']/g,
+          (m) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#039;",
+            })[m],
+        );
+      }
+
+      function updateStats() {
+        const total = allFeedback.length;
+        const newCount = allFeedback.filter(
+          (fb) => fb.status !== "reviewed",
+        ).length;
+        const reviewedCount = allFeedback.filter(
+          (fb) => fb.status === "reviewed",
+        ).length;
+
+        document.getElementById("statTotal").textContent = total;
+        document.getElementById("statNewCount").textContent = newCount;
+        document.getElementById("statReviewedCount").textContent =
+          reviewedCount;
+        document.getElementById("feedbackCount").textContent =
+          total + " feedback";
+      }
+
+      window.filterByStatus = function (status) {
+        currentStatusFilter = status;
+        document
+          .querySelectorAll(".stat-card")
+          .forEach((card) => card.classList.remove("active"));
+        if (status === "all")
+          document.getElementById("statAll").classList.add("active");
+        if (status === "new")
+          document.getElementById("statNew").classList.add("active");
+        if (status === "reviewed")
+          document.getElementById("statReviewed").classList.add("active");
+        applyFiltersAndSearch();
+      };
+
+      function applyFiltersAndSearch() {
+        let filtered = [...allFeedback];
+
+        if (currentStatusFilter === "new") {
+          filtered = filtered.filter((fb) => fb.status !== "reviewed");
+        } else if (currentStatusFilter === "reviewed") {
+          filtered = filtered.filter((fb) => fb.status === "reviewed");
+        }
+
+        const filterDate = document.getElementById("filterDate").value;
+        if (filterDate) {
+          filtered = filtered.filter((fb) => {
+            const fbDate = new Date(fb.createdAt).toISOString().split("T")[0];
+            return fbDate === filterDate;
+          });
+        }
+
+        const searchTerm = document
+          .getElementById("searchInput")
+          .value.toLowerCase()
+          .trim();
+        if (searchTerm) {
+          filtered = filtered.filter(
+            (fb) =>
+              (fb.userName && fb.userName.toLowerCase().includes(searchTerm)) ||
+              (fb.email && fb.email.toLowerCase().includes(searchTerm)) ||
+              (fb.message && fb.message.toLowerCase().includes(searchTerm)),
+          );
+        }
+
+        renderTable(filtered);
+      }
+
+      /* ═══ Smart dropdown positioning near icon ═══ */
+      function positionActionDropdown(toggleBtn, dropdown) {
+        const rect = toggleBtn.getBoundingClientRect();
+        const dropdownHeight = 180;
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+
+        // Position near the icon
+        let top = rect.bottom + 4;
+        let left = rect.left - 160; // Align right edge near icon
+
+        // Flip above if not enough space below
+        if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
+          top = rect.top - dropdownHeight - 4;
+        }
+
+        // Keep within viewport
+        if (left < 8) left = 8;
+        if (left + 190 > window.innerWidth - 8) left = window.innerWidth - 198;
+
+        dropdown.style.top = top + "px";
+        dropdown.style.left = left + "px";
+      }
+
+      function renderTable(feedbacks) {
+        const tbody = document.getElementById("feedbackBody");
+
+        if (feedbacks.length === 0) {
+          tbody.innerHTML = `
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <h3>No feedback found</h3>
+                            <p>Try adjusting your filters or search.</p>
+                        </div>
+                    </td>
+                </tr>`;
+          return;
+        }
+
+        tbody.innerHTML = feedbacks
+          .map((fb) => {
+            const isReviewed = fb.status === "reviewed";
+            const statusBadge = isReviewed
+              ? '<span class="badge-status badge-reviewed">Reviewed</span>'
+              : '<span class="badge-status badge-new">New</span>';
+            const reviewBtnText = isReviewed
+              ? "Mark Unreviewed"
+              : "Mark Reviewed";
+            const reviewBtnIcon = isReviewed ? "fa-undo" : "fa-check";
+
+            return `
+            <tr data-id="${fb._id}">
+                <td>
+                    <div class="user-cell">
+                        <div class="user-avatar">${getInitials(fb.userName)}</div>
+                        ${escapeHtml(fb.userName)}
+                    </div>
+                </td>
+                <td>${escapeHtml(fb.email)}</td>
+                <td>
+                    <div class="message-preview" title="${escapeHtml(fb.message)}">
+                        ${escapeHtml(fb.message)}
+                    </div>
+                </td>
+                <td>${statusBadge}</td>
+                <td>${new Date(fb.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</td>
+                <td class="action-cell">
+                    <button class="action-dots" data-id="${fb._id}" title="Actions">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="action-dropdown" id="action-${fb._id}">
+                        <button class="view-btn" data-action="view" data-id="${fb._id}">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                        <button class="review-btn" data-action="review" data-id="${fb._id}" data-status="${fb.status || "new"}">
+                            <i class="fas ${reviewBtnIcon}"></i> ${reviewBtnText}
+                        </button>
+                        <button class="delete-btn" data-action="delete" data-id="${fb._id}">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    </div>
+                </td>
+            </tr>`;
+          })
+          .join("");
+
+        // Attach click handlers to each 3-dot button
+        tbody.querySelectorAll(".action-dots").forEach((btn) => {
+          const id = btn.dataset.id;
+          const dropdown = document.getElementById("action-" + id);
+
+          if (!dropdown) return;
+
+          btn.addEventListener("click", function (e) {
+            e.stopPropagation();
+
+            // Close other action dropdowns
+            document.querySelectorAll(".action-dropdown.show").forEach((d) => {
+              if (d !== dropdown) d.classList.remove("show");
+            });
+            // Close profile dropdown
+            document
+              .getElementById("profileDropdown")
+              ?.classList.remove("active");
+
+            // Position and toggle
+            positionActionDropdown(btn, dropdown);
+            dropdown.classList.toggle("show");
+          });
+
+          dropdown.addEventListener("click", function (e) {
+            e.stopPropagation();
+          });
+
+          dropdown
+            .querySelector(".view-btn")
+            ?.addEventListener("click", function () {
+              dropdown.classList.remove("show");
+              window.location.href = "/admin/feedback-view?id=" + id;
+            });
+          dropdown
+            .querySelector(".review-btn")
+            ?.addEventListener("click", function () {
+              dropdown.classList.remove("show");
+              const currentStatus = this.dataset.status;
+              toggleReviewStatus(id, currentStatus);
+            });
+          dropdown
+            .querySelector(".delete-btn")
+            ?.addEventListener("click", function () {
+              dropdown.classList.remove("show");
+              deleteFeedbackItem(id);
+            });
+        });
+      }
+
+      // Close action dropdowns on outside click
+      document.addEventListener("click", function (e) {
+        document.querySelectorAll(".action-dropdown.show").forEach((d) => {
+          const toggle = d.parentElement?.querySelector(".action-dots");
+          if (toggle && !toggle.contains(e.target) && !d.contains(e.target)) {
+            d.classList.remove("show");
+          }
+        });
+      });
+
+      // Reposition on scroll/resize
+      function repositionAllActionDropdowns() {
+        document.querySelectorAll(".action-dropdown.show").forEach((d) => {
+          const toggle = d.parentElement?.querySelector(".action-dots");
+          if (toggle) positionActionDropdown(toggle, d);
+        });
+      }
+      document
+        .querySelector(".main-content")
+        .addEventListener("scroll", repositionAllActionDropdowns, {
+          passive: true,
+        });
+      window.addEventListener("resize", repositionAllActionDropdowns);
+
+      async function toggleReviewStatus(id, currentStatus) {
+        const newStatus = currentStatus === "reviewed" ? "new" : "reviewed";
+        try {
+          const res = await fetch("/api/admin/feedback/" + id, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: newStatus }),
+          });
+
+          if (res.ok) {
+            const fb = allFeedback.find((f) => f._id === id);
+            if (fb) fb.status = newStatus;
+            updateStats();
+            applyFiltersAndSearch();
+          } else {
+            const data = await res.json();
+            alert("Failed: " + (data.message || "Unknown error"));
+          }
+        } catch (err) {
+          console.error("Error:", err);
+          alert("Network error. Please try again.");
+        }
+      }
+
+      async function deleteFeedbackItem(id) {
+        if (!confirm("Delete this feedback permanently?")) return;
+        try {
+          const res = await fetch("/api/admin/feedback/" + id, {
+            method: "DELETE",
+          });
+          if (res.ok) {
+            allFeedback = allFeedback.filter((fb) => fb._id !== id);
+            updateStats();
+            applyFiltersAndSearch();
+          }
+        } catch (err) {
+          alert("Failed to delete: " + err.message);
+        }
+      }
+
+      async function fetchAllFeedback() {
+        try {
+          const res = await fetch("/api/admin/feedback");
+          if (!res.ok) throw new Error("Failed to load");
+          allFeedback = await res.json();
+        } catch (err) {
+          console.error(err);
+          allFeedback = [];
+        }
+      }
+
+      document
+        .getElementById("applyFilter")
+        .addEventListener("click", applyFiltersAndSearch);
+      document.getElementById("resetFilter").addEventListener("click", () => {
+        document.getElementById("filterDate").value = "";
+        document.getElementById("searchInput").value = "";
+        currentStatusFilter = "all";
+        document
+          .querySelectorAll(".stat-card")
+          .forEach((card) => card.classList.remove("active"));
+        document.getElementById("statAll").classList.add("active");
+        applyFiltersAndSearch();
+      });
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", applyFiltersAndSearch);
+
+      (async () => {
+        await fetchAllFeedback();
+        updateStats();
+        applyFiltersAndSearch();
+      })();
+    </script>
+  </body>
+</html>

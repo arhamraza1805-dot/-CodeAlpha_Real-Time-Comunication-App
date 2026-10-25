@@ -1,0 +1,1129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit User | Screen Recorder</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/sidebarAdmin.css" />
+    <script src="../js/admin-sidebar.js"></script>
+    <style>
+      :root {
+        --navy-950: #030a14;
+        --navy-900: #051220;
+        --navy-800: #0a1a2f;
+        --blue-500: #3b82f6;
+        --blue-400: #60a5fa;
+        --blue-300: #93c5fd;
+        --accent: #38bdf8;
+        --gray-50: #f9fafb;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-500: #6b7280;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --gray-900: #111827;
+        --blue-600: #2563eb;
+        --blue-700: #1d4ed8;
+        --green-50: #f0fdf4;
+        --green-500: #22c55e;
+        --green-600: #16a34a;
+        --red-50: #fef2f2;
+        --red-500: #ef4444;
+        --purple-50: #faf5ff;
+        --purple-500: #a855f7;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", "Outfit", sans-serif;
+        background: #f1f5f9;
+        color: var(--gray-800);
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .main-content {
+        flex: 1;
+        margin-left: 260px;
+        padding: 2rem;
+        transition: margin-left 0.3s ease;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      /* Page Header */
+      .page-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .back-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        border: none;
+        background: #fff;
+        color: var(--gray-600);
+        cursor: pointer;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        transition: all 0.2s;
+        flex-shrink: 0;
+      }
+
+      .back-btn:hover {
+        background: #eff6ff;
+        color: var(--blue-600);
+        transform: translateX(-2px);
+      }
+
+      .page-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .page-title i {
+        color: var(--blue-600);
+      }
+
+      /* Edit Card */
+      .edit-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+      }
+
+      /* ═══════════════════════════════════════════
+           HEADER — Matches Sidebar Background
+           ═══════════════════════════════════════════ */
+      .edit-header {
+        background: var(--navy-950);
+        padding: 2rem 2.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Background Orbs — matching sidebar */
+      .edit-header::before {
+        content: "";
+        position: absolute;
+        width: 420px;
+        height: 420px;
+        background: radial-gradient(
+          circle,
+          rgba(59, 130, 246, 0.35) 0%,
+          transparent 70%
+        );
+        top: -80px;
+        left: -100px;
+        border-radius: 50%;
+        animation: orbFloat1 10s ease-in-out infinite;
+        pointer-events: none;
+      }
+
+      .edit-header::after {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(
+          circle,
+          rgba(56, 189, 248, 0.2) 0%,
+          transparent 65%
+        );
+        bottom: -60px;
+        right: -80px;
+        border-radius: 50%;
+        animation: orbFloat2 13s ease-in-out infinite;
+        pointer-events: none;
+      }
+
+      @keyframes orbFloat1 {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        50% {
+          transform: translate(40px, 30px) scale(1.1);
+        }
+      }
+
+      @keyframes orbFloat2 {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        50% {
+          transform: translate(-30px, -20px) scale(1.08);
+        }
+      }
+
+      /* Grid lines — matching sidebar */
+      .edit-header .header-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(56, 189, 248, 0.08) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+      }
+
+      /* Header content — above animations */
+      .edit-header > *:not(.header-grid) {
+        position: relative;
+        z-index: 2;
+      }
+
+      .edit-avatar {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--blue-500), var(--accent));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #fff;
+        border: 3px solid rgba(255, 255, 255, 0.25);
+        box-shadow:
+          0 8px 25px rgba(0, 0, 0, 0.3),
+          0 0 30px rgba(59, 130, 246, 0.2);
+        flex-shrink: 0;
+        z-index: 2;
+        animation: avatarGlow 3s ease-in-out infinite;
+      }
+
+      @keyframes avatarGlow {
+        0%,
+        100% {
+          box-shadow:
+            0 8px 25px rgba(0, 0, 0, 0.3),
+            0 0 20px rgba(59, 130, 246, 0.2);
+        }
+        50% {
+          box-shadow:
+            0 8px 25px rgba(0, 0, 0, 0.3),
+            0 0 40px rgba(56, 189, 248, 0.4);
+        }
+      }
+
+      .edit-header-info {
+        z-index: 2;
+      }
+
+      .edit-header-info h2 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #fff;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .edit-header-info p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.85rem;
+        margin-top: 0.2rem;
+      }
+
+      .edit-header-info .user-id {
+        font-family: "Courier New", monospace;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.5);
+        margin-top: 0.3rem;
+        background: rgba(255, 255, 255, 0.06);
+        padding: 0.2rem 0.6rem;
+        border-radius: 6px;
+        display: inline-block;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      /* Card Body */
+      .edit-body {
+        padding: 2.5rem;
+      }
+
+      /* Section Title */
+      .section-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--gray-800);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.2rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 2px solid var(--gray-100);
+      }
+
+      .section-title i {
+        color: var(--blue-600);
+        font-size: 0.9rem;
+      }
+
+      /* Form Grid */
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.2rem;
+        margin-bottom: 2rem;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group.full-width {
+        grid-column: 1 / -1;
+      }
+
+      .form-group label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--gray-500);
+        margin-bottom: 0.4rem;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
+      .form-group label .required {
+        color: #ef4444;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        border: 1.5px solid var(--gray-200);
+        border-radius: 10px;
+        font-family: inherit;
+        font-size: 0.9rem;
+        color: var(--gray-800);
+        background: var(--gray-50);
+        transition: all 0.2s;
+        outline: none;
+      }
+
+      .form-input:hover {
+        border-color: var(--gray-300);
+      }
+
+      .form-input:focus {
+        border-color: var(--blue-500);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+        background: #fff;
+      }
+
+      textarea.form-input {
+        resize: vertical;
+        min-height: 90px;
+      }
+
+      .input-with-icon {
+        position: relative;
+      }
+
+      .input-with-icon .form-input {
+        padding-left: 2.5rem;
+      }
+
+      .input-with-icon .input-icon {
+        position: absolute;
+        left: 0.85rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-400);
+        font-size: 0.85rem;
+        transition: color 0.2s;
+      }
+
+      .input-with-icon .form-input:focus ~ .input-icon {
+        color: var(--blue-500);
+      }
+
+      .char-counter {
+        font-size: 0.72rem;
+        color: var(--gray-400);
+        margin-top: 0.3rem;
+        text-align: right;
+      }
+
+      /* Password Section */
+      .password-section {
+        background: #fafafa;
+        border: 2px dashed var(--gray-300);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .password-section .current-hash-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--gray-400);
+        margin-bottom: 0.4rem;
+      }
+
+      .password-section .current-hash {
+        background: #fff;
+        padding: 0.65rem 1rem;
+        border-radius: 10px;
+        font-family: "Courier New", monospace;
+        font-size: 0.78rem;
+        color: var(--gray-700);
+        word-break: break-all;
+        border: 1px solid var(--gray-200);
+        margin-bottom: 1.2rem;
+        line-height: 1.4;
+      }
+
+      .password-input-wrapper {
+        position: relative;
+      }
+
+      .password-input-wrapper .form-input {
+        padding-right: 2.8rem;
+      }
+
+      .toggle-password-btn {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #fff;
+        border: 1px solid var(--gray-200);
+        color: var(--gray-500);
+        cursor: pointer;
+        padding: 0.4rem 0.6rem;
+        border-radius: 8px;
+        transition: all 0.2s;
+        font-size: 0.85rem;
+      }
+
+      .toggle-password-btn:hover {
+        background: var(--gray-50);
+        color: var(--gray-700);
+        border-color: var(--gray-300);
+      }
+
+      /* Toggle Switches */
+      .toggles-section {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        padding: 1.5rem;
+        background: var(--gray-50);
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        border: 1px solid var(--gray-100);
+      }
+
+      .toggle-item {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 0.6rem 1rem;
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid var(--gray-100);
+        transition: all 0.2s;
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .toggle-item:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }
+
+      .toggle-item .toggle-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+      }
+
+      .toggle-item .toggle-icon.admin {
+        background: #faf5ff;
+        color: #a855f7;
+      }
+      .toggle-item .toggle-icon.block {
+        background: #fef2f2;
+        color: #ef4444;
+      }
+
+      .toggle-item .toggle-info {
+        flex: 1;
+        min-width: 80px;
+      }
+
+      .toggle-item .toggle-label {
+        font-weight: 600;
+        color: var(--gray-700);
+        font-size: 0.85rem;
+      }
+
+      .toggle-item .toggle-desc {
+        font-size: 0.7rem;
+        color: var(--gray-400);
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 26px;
+        flex-shrink: 0;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #d1d5db;
+        border-radius: 34px;
+        transition: 0.3s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        border-radius: 50%;
+        transition: 0.3s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+
+      input:checked + .slider {
+        background-color: var(--blue-600);
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(22px);
+      }
+
+      /* Buttons */
+      .btn-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .btn-primary {
+        padding: 0.8rem 2.2rem;
+        background: var(--blue-600);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+        font-family: inherit;
+        letter-spacing: 0.01em;
+      }
+
+      .btn-primary:hover {
+        background: var(--blue-700);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+      }
+
+      .btn-primary:disabled {
+        background: var(--gray-300);
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .btn-outline {
+        padding: 0.8rem 2.2rem;
+        background: #fff;
+        color: var(--gray-700);
+        border: 1.5px solid var(--gray-200);
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+        font-family: inherit;
+        text-decoration: none;
+        letter-spacing: 0.01em;
+      }
+
+      .btn-outline:hover {
+        background: var(--gray-50);
+        border-color: var(--gray-300);
+        transform: translateY(-1px);
+      }
+
+      .btn-danger {
+        padding: 0.8rem 2.2rem;
+        background: #fff;
+        color: #ef4444;
+        border: 1.5px solid #fecaca;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+        font-family: inherit;
+        text-decoration: none;
+      }
+
+      .btn-danger:hover {
+        background: #fef2f2;
+        border-color: #fca5a5;
+      }
+
+      /* Status Message */
+      .status-msg {
+        margin-top: 1.2rem;
+        padding: 0.9rem 1.2rem;
+        border-radius: 12px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        display: none;
+        animation: slideDown 0.3s ease;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .status-msg.success {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #d1fae5;
+        color: #065f46;
+        border-left: 4px solid var(--green-500);
+      }
+
+      .status-msg.error {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #fef2f2;
+        color: #991b1b;
+        border-left: 4px solid var(--red-500);
+      }
+
+      /* Loading */
+      .loading-state {
+        text-align: center;
+        padding: 5rem 2rem;
+        background: #fff;
+        border-radius: 20px;
+        color: var(--gray-400);
+      }
+
+      .loading-state i {
+        font-size: 2.5rem;
+        color: var(--blue-500);
+        margin-bottom: 0.8rem;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .main-content {
+          margin-left: 0;
+          padding: 1rem;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+        .edit-body {
+          padding: 1.5rem;
+        }
+        .edit-header {
+          padding: 1.5rem;
+          flex-direction: column;
+          text-align: center;
+        }
+        .toggles-section {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sidebar-container"></div>
+
+    <div class="main-content" id="mainContent">
+      <div class="container">
+        <!-- Header -->
+        <div class="page-header">
+          <button
+            class="back-btn"
+            onclick="window.location.href = '/admin/users'"
+            title="Back to Users"
+          >
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <h1 class="page-title"><i class="fas fa-user-pen"></i> Edit User</h1>
+        </div>
+
+        <!-- Loading -->
+        <div id="loadingState" class="loading-state">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Loading user data...</p>
+        </div>
+
+        <!-- Edit Card -->
+        <div id="editCard" class="edit-card" style="display: none">
+          <!-- ═══════════════════════════════════════
+                     HEADER with Sidebar Background
+                     ═══════════════════════════════════════ -->
+          <div class="edit-header">
+            <div class="header-grid"></div>
+            <div class="edit-avatar" id="editAvatar">?</div>
+            <div class="edit-header-info">
+              <h2 id="editUserName">Loading...</h2>
+              <p id="editUserEmail">-</p>
+              <span class="user-id" id="editUserId">-</span>
+            </div>
+          </div>
+
+          <!-- Form Body -->
+          <div class="edit-body">
+            <form id="editForm">
+              <!-- Personal Information -->
+              <div class="section-title">
+                <i class="fas fa-user"></i> Personal Information
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Full Name <span class="required">*</span></label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-user input-icon"></i>
+                    <input
+                      type="text"
+                      id="name"
+                      class="form-input"
+                      placeholder="John Doe"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Email Address <span class="required">*</span></label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input
+                      type="email"
+                      id="email"
+                      class="form-input"
+                      placeholder="john@example.com"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Phone Number</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-phone input-icon"></i>
+                    <input
+                      type="text"
+                      id="phone"
+                      class="form-input"
+                      placeholder="+1 (555) 000-0000"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Address</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-map-marker-alt input-icon"></i>
+                    <input
+                      type="text"
+                      id="address"
+                      class="form-input"
+                      placeholder="123 Main Street"
+                    />
+                  </div>
+                </div>
+                <div class="form-group full-width">
+                  <label>Bio</label>
+                  <textarea
+                    id="bio"
+                    class="form-input"
+                    rows="3"
+                    placeholder="Write a short bio about this user..."
+                    maxlength="500"
+                  ></textarea>
+                  <span class="char-counter" id="bioCounter">0 / 500</span>
+                </div>
+              </div>
+
+              <!-- Password Section -->
+              <div class="section-title">
+                <i class="fas fa-lock"></i> Password
+              </div>
+              <div class="password-section">
+                <p class="current-hash-label">Current Password (Hashed)</p>
+                <div class="current-hash" id="currentPasswordHash">—</div>
+                <label
+                  style="
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    color: var(--gray-700);
+                    display: block;
+                    margin-bottom: 0.4rem;
+                  "
+                >
+                  New Password
+                  <small style="font-weight: 400; color: var(--gray-400)"
+                    >(leave blank to keep current)</small
+                  >
+                </label>
+                <div class="password-input-wrapper">
+                  <input
+                    type="password"
+                    id="password"
+                    class="form-input"
+                    placeholder="Enter new password (min 6 characters)"
+                    style="padding-right: 5rem"
+                  />
+                  <button
+                    type="button"
+                    class="toggle-password-btn"
+                    onclick="togglePassword()"
+                    title="Show/Hide Password"
+                  >
+                    <i class="fas fa-eye" id="toggleIcon"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Permissions -->
+              <div class="section-title">
+                <i class="fas fa-shield-alt"></i> Permissions
+              </div>
+              <div class="toggles-section">
+                <div class="toggle-item">
+                  <div class="toggle-icon admin">
+                    <i class="fas fa-user-shield"></i>
+                  </div>
+                  <div class="toggle-info">
+                    <div class="toggle-label">Admin Role</div>
+                    <div class="toggle-desc">Full access to admin panel</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="isAdmin" />
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="toggle-item">
+                  <div class="toggle-icon block">
+                    <i class="fas fa-ban"></i>
+                  </div>
+                  <div class="toggle-info">
+                    <div class="toggle-label">Blocked</div>
+                    <div class="toggle-desc">Prevent user from logging in</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="isBlocked" />
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Buttons -->
+              <div class="btn-row">
+                <button type="submit" class="btn-primary" id="submitBtn">
+                  <i class="fas fa-save"></i> Update User
+                </button>
+                <a href="/admin/users" class="btn-outline">
+                  <i class="fas fa-times"></i> Cancel
+                </a>
+                <a
+                  href="#"
+                  class="btn-danger"
+                  id="deleteUserBtn"
+                  style="margin-left: auto"
+                >
+                  <i class="fas fa-trash-alt"></i> Delete User
+                </a>
+              </div>
+            </form>
+
+            <div id="statusMsg" class="status-msg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "http://localhost:5000/api";
+      let currentUserId = null;
+      let currentUserData = null;
+
+      function getQueryParam(key) {
+        const params = new URLSearchParams(window.location.search);
+        return params.get(key);
+      }
+
+      function getInitials(name) {
+        return name
+          ? name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 2)
+          : "?";
+      }
+
+      function showStatus(text, type) {
+        const box = document.getElementById("statusMsg");
+        box.innerHTML = text;
+        box.className = `status-msg ${type}`;
+        setTimeout(() => {
+          box.className = "status-msg";
+        }, 5000);
+      }
+
+      async function loadUser() {
+        const id = getQueryParam("id");
+        if (!id) {
+          document.getElementById("loadingState").innerHTML =
+            '<i class="fas fa-exclamation-circle" style="color:#ef4444;"></i><p style="color:#ef4444;">No user ID provided.</p>';
+          return;
+        }
+        currentUserId = id;
+
+        try {
+          const res = await fetch(`${API_BASE}/admin/users/${id}`);
+          if (!res.ok) throw new Error("User not found");
+          currentUserData = await res.json();
+          populateForm(currentUserData);
+          document.getElementById("loadingState").style.display = "none";
+          document.getElementById("editCard").style.display = "block";
+        } catch (err) {
+          document.getElementById("loadingState").innerHTML =
+            `<i class="fas fa-exclamation-circle" style="color:#ef4444;"></i><p style="color:#ef4444;">Error: ${err.message}</p>`;
+        }
+      }
+
+      function populateForm(user) {
+        document.getElementById("editAvatar").textContent = getInitials(
+          user.name,
+        );
+        document.getElementById("editUserName").textContent =
+          user.name || "Unknown";
+        document.getElementById("editUserEmail").textContent = user.email || "";
+        document.getElementById("editUserId").textContent =
+          "ID: " + (user._id || "-");
+        document.getElementById("name").value = user.name || "";
+        document.getElementById("email").value = user.email || "";
+        document.getElementById("phone").value = user.phone || "";
+        document.getElementById("address").value = user.address || "";
+        document.getElementById("bio").value = user.bio || "";
+        document.getElementById("currentPasswordHash").textContent =
+          user.password || "—";
+        document.getElementById("isAdmin").checked = user.isAdmin || false;
+        document.getElementById("isBlocked").checked = user.isBlocked || false;
+        updateBioCounter();
+
+        document
+          .getElementById("deleteUserBtn")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            deleteUser();
+          });
+      }
+
+      function updateBioCounter() {
+        const len = document.getElementById("bio").value.length;
+        document.getElementById("bioCounter").textContent = len + " / 500";
+      }
+
+      document
+        .getElementById("bio")
+        .addEventListener("input", updateBioCounter);
+
+      window.togglePassword = function () {
+        const pwInput = document.getElementById("password");
+        const icon = document.getElementById("toggleIcon");
+        if (pwInput.type === "password") {
+          pwInput.type = "text";
+          icon.classList.replace("fa-eye", "fa-eye-slash");
+        } else {
+          pwInput.type = "password";
+          icon.classList.replace("fa-eye-slash", "fa-eye");
+        }
+      };
+
+      async function deleteUser() {
+        if (
+          !confirm(
+            "Are you sure you want to permanently delete this user? This action cannot be undone.",
+          )
+        )
+          return;
+        try {
+          const res = await fetch(`${API_BASE}/admin/users/${currentUserId}`, {
+            method: "DELETE",
+          });
+          if (res.ok) {
+            window.location.href = "/admin/users";
+          } else {
+            const data = await res.json();
+            showStatus(
+              '<i class="fas fa-exclamation-circle"></i> ' +
+                (data.message || "Delete failed"),
+              "error",
+            );
+          }
+        } catch (err) {
+          showStatus(
+            '<i class="fas fa-exclamation-circle"></i> Network error. Please try again.',
+            "error",
+          );
+        }
+      }
+
+      document
+        .getElementById("editForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          if (!currentUserId) return;
+
+          const submitBtn = document.getElementById("submitBtn");
+          submitBtn.disabled = true;
+          submitBtn.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Updating...';
+
+          const payload = {
+            name: document.getElementById("name").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            phone: document.getElementById("phone").value.trim(),
+            address: document.getElementById("address").value.trim(),
+            bio: document.getElementById("bio").value.trim(),
+            password: document.getElementById("password").value,
+            isAdmin: document.getElementById("isAdmin").checked,
+            isBlocked: document.getElementById("isBlocked").checked,
+          };
+
+          try {
+            const res = await fetch(
+              `${API_BASE}/admin/users/${currentUserId}`,
+              {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+              },
+            );
+            const data = await res.json();
+            if (res.ok) {
+              showStatus(
+                '<i class="fas fa-check-circle"></i> User updated successfully!',
+                "success",
+              );
+              document.getElementById("password").value = "";
+              document
+                .getElementById("toggleIcon")
+                .classList.replace("fa-eye-slash", "fa-eye");
+              document.getElementById("password").type = "password";
+              document.getElementById("editUserName").textContent =
+                payload.name;
+              document.getElementById("editUserEmail").textContent =
+                payload.email;
+              document.getElementById("editAvatar").textContent = getInitials(
+                payload.name,
+              );
+            } else {
+              showStatus(
+                '<i class="fas fa-exclamation-circle"></i> ' +
+                  (data.message || "Update failed"),
+                "error",
+              );
+            }
+          } catch (err) {
+            showStatus(
+              '<i class="fas fa-exclamation-circle"></i> Network error. Please try again.',
+              "error",
+            );
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-save"></i> Update User';
+          }
+        });
+
+      document.addEventListener("DOMContentLoaded", loadUser);
+    </script>
+  </body>
+</html>
